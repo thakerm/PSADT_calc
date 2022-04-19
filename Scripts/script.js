@@ -9,7 +9,7 @@ function onlySpaces(str) {
 }
 
 function clearInput() {
-    LOG('enter clear');
+    //LOG('enter clear');
     document.getElementById("entry").value = '';
 
 }
@@ -17,10 +17,7 @@ function clearInput() {
 function changeMe() {
 
     text = document.getElementById("entry").value;
-    LOG('text', text)
     PSA_text_edit = text.split("\n");
-    LOG('PSA_text_edit', PSA_text_edit)
-    //------------------
 
     cleaned = new Array();
 
@@ -30,20 +27,15 @@ function changeMe() {
         cleaned.push(line)
     }
 
-    LOG('cleaned', cleaned)
+    //LOG('cleaned', cleaned)
     GenerateTable();
     return;
-    //alert(PSA_text_edit);
+}
 
-    for (let i = 0; i < PSA_length; i++) {
-        PSA[i] = PSA_text_edit[i].split(/\s+/);
-        PSA[i].shift();
-        PSA[i].shift();
-        //alert(PSA[i]);
-    }
-    //call makeTable function
-    makeTable(PSA, PSA_length);
-
+function diff_days(dt2, dt1) {
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= (60 * 60 * 24);
+    return diff;
 }
 
 function reset_tables() {
@@ -54,17 +46,10 @@ function reset_tables() {
 
     table_classes = "table-striped  table-sm table-bordered table-hover"
     inputTable.setAttribute('class', table_classes)
-    inputTable.border = "1";
+    inputTable.border = "5";
 }
 
 
-function diff_days(dt2, dt1) {
-
-    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
-    diff /= (60 * 60 * 24);
-    return diff;
-
-}
 function GenerateTable() {
     //Build an array containing Customer records.
     var input_label = ["PSA", "Date", "Days"]
@@ -83,20 +68,21 @@ function GenerateTable() {
     // Fill out rest of 'input_table' add the data rows
     for (var i = 0; i < rowCount + 1; i++) {  // +1 is for the header
         var row = inputTable.insertRow(-1);
+        if (i == 0) row.setAttribute('class', 'table-primary')
         if (i > 0) {
-            match = cleaned[i - 1].match(regex)
+            match = cleaned[i - 1].match(regex)  // need to do i-1 as we now have header row
             //LOG('match', match)
             var date_x = new Date(match[2]);
-            LOG('date_x', date_x, 'min_date', min_date)
+            //LOG('date_x', date_x, 'min_date', min_date)
             if (date_x < min_date) {
                 min_date = date_x
-                LOG('min_date', min_date)
+                //LOG('min_date', min_date)
             }
         }
         for (var j = 0; j < columnCount; j++) { // there is a label_column, then input value columns
             var cell = row.insertCell(-1);  // this will be <td> element
             if (i == 0) {
-                cell.innerHTML = input_label[j];
+                cell.innerHTML = input_label[j];  // header values
             }
             else {
                 cell.id = `input_${i}_${j}`    // we will use this tag to retrieve values for calculations
@@ -104,12 +90,13 @@ function GenerateTable() {
                 //cell.inputmode = "numeric"  // This does not seem to set on a table cell (need input element?)
                 //set_input_color(cell)
                 if (j <= 1) {
+                    //LOG(i,j,'match',match)
                     cell.innerHTML = match[j + 1]  // match[1] is group 1, etc.
                 }
                 else {
                     cell.innerHTML = '';   // init the 'days' column with empty string
                 }
-                LOG(i, j, cell)
+                //LOG(i, j, cell)
             }
         }
     }
@@ -123,13 +110,15 @@ function GenerateTable() {
         cell_x = document.querySelector(`#input_${i}_1`)
         //LOG('idx', idx, 'cell_x', cell_x)
         date_x = new Date(cell_x.innerHTML)
+        //LOG('date_x', date_x, 'min_date', min_date)
         delta_d = diff_days(date_x, min_date)
+        //LOG('delta_d', delta_d)
         document.querySelector(`#input_${i}_2`).innerHTML = delta_d
         psa_value = parseFloat(document.querySelector(`#input_${i}_0`).innerHTML)
-        LOG(delta_d, psa_value)
+        //LOG(delta_d, psa_value)
         for_regression.push(new Array(delta_d, psa_value))
     }
-
+    LOG('for_regression', for_regression)
     // next, we reverse the array (TODO, put in time ascending order)
     for_regression = for_regression.reverse();
     var lr = ss.linearRegression(for_regression);
