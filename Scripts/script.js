@@ -1,6 +1,8 @@
 var cleaned;
 var inputTable;
 
+var debug = true
+var LOG = debug ? console.log.bind(console) : function () { };       // will turn off all console.log statements.
 
 function onlySpaces(str) {
     return str.trim().length === 0;
@@ -9,20 +11,20 @@ function onlySpaces(str) {
 function changeMe() {
 
     text = document.getElementById("entry").value;
-    console.log('text', text)
+    LOG('text', text)
     PSA_text_edit = text.split("\n");
-    console.log('PSA_text_edit', PSA_text_edit)
+    LOG('PSA_text_edit', PSA_text_edit)
     //------------------
 
     cleaned = new Array();
-  
+
     for (const line of PSA_text_edit) {
         if (onlySpaces(line)) continue;
         if (line.startsWith("Basename")) continue;
         cleaned.push(line)
     }
 
-    console.log('cleaned', cleaned)
+    LOG('cleaned', cleaned)
     GenerateTable();
     return;
     //alert(PSA_text_edit);
@@ -42,28 +44,49 @@ function reset_tables() {
     var thead
     // fist, save the current input value
     inputTable = document.createElement("TABLE");
-    inputTable.setAttribute("onkeyup", "UpdateCalcs();")
+    //inputTable.setAttribute("onkeyup", "UpdateCalcs();")
 
     table_classes = "table-striped  table-sm table-bordered table-hover"
-
+    inputTable.setAttribute('class', table_classes)
     inputTable.border = "1";
 }
 
+
+function diff_days(dt2, dt1) {
+
+    var diff = (dt2.getTime() - dt1.getTime()) / 1000;
+    diff /= (60 * 60 * 24);
+    return diff;
+
+}
 function GenerateTable() {
     //Build an array containing Customer records.
-    var input_label = ["PSA", "Date"]
+    var input_label = ["PSA", "Date", "Days"]
     var row, header;
+    var today = new Date();
+    var min_date = today;  // earliest day we have in our table (we start w/ today as being a max value)
+    const regex = /\s*PSA\s+(\d+(?:\.\d*)?)\s+(\d\d\/\d\d\/\d\d\d\d)/;
 
     reset_tables()
 
     //Get the count of columns.
     columnCount = input_label.length;
     rowCount = cleaned.length;
-    console.log('rowCount', rowCount, 'columnCount', columnCount)
+    LOG('rowCount', rowCount, 'columnCount', columnCount)
 
     // Fill out rest of 'input_table' add the data rows
-    for (var i = 0; i < rowCount+1; i++) {  // +1 is for the header
+    for (var i = 0; i < rowCount + 1; i++) {  // +1 is for the header
         var row = inputTable.insertRow(-1);
+        if (i > 0) {
+            match = cleaned[i - 1].match(regex)
+            //LOG('match', match)
+            var date_x = new Date(match[2]);
+            LOG('date_x', date_x, 'min_date', min_date)
+            if (date_x < min_date) {
+                min_date = date_x
+                LOG('min_date', min_date)
+            }
+        }
         for (var j = 0; j < columnCount; j++) { // there is a label_column, then input value columns
             var cell = row.insertCell(-1);  // this will be <td> element
             if (i == 0) {
@@ -71,17 +94,31 @@ function GenerateTable() {
             }
             else {
                 cell.id = `input_${i}_${j}`    // we will use this tag to retrieve values for calculations
-                cell.contentEditable = true
-                cell.inputmode = "numeric"  // This does not seem to set on a table cell (need input element?)
-                //last_value = getCurrentValue('input', i, j)
-                // if (last_value != 0) cell.textContent = last_value
+                cell.contentEditable = false
+                //cell.inputmode = "numeric"  // This does not seem to set on a table cell (need input element?)
                 //set_input_color(cell)
+                if (j <= 1) {
+                    cell.innerHTML = match[j + 1]  // match[1] is group 1, etc.
+                }
+                else {
+                    cell.innerHTML = '';   // init the 'days' column with empty string
+                }
+                LOG(i, j, cell)
             }
         }
     }
     var inputTableElem = document.getElementById("PSA_data");
     inputTableElem.innerHTML = "";
     inputTableElem.appendChild(inputTable);
+    // we must do above before we can manipulate the 'Days' column via querySelector()
+    for (var i = 1; i < rowCount + 1; i++) {  // +1 is for the header
+        idx = `#input_${i}_1`
+        cell_x = document.querySelector(`#input_${i}_1`)
+        LOG('idx', idx, 'cell_x', cell_x)
+        date_x = new Date(cell_x.innerHTML)
+        delta_d = diff_days(date_x, min_date)
+        document.querySelector(`#input_${i}_2`).innerHTML = delta_d
+    }
 }
 
 function clear() {
