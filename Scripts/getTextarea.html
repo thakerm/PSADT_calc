@@ -1,0 +1,85 @@
+<html>
+<head>
+    <link rel="stylesheet" href="style.css">
+    <script>
+        function changeMe()
+        {
+
+            var string = "This is a test";
+            var string_split = string.split(" ");
+
+            console.log(string_split);
+           /*     
+            var text_no = new Array();
+            var PSA = new Array();
+            var Dates = new Array();
+            var month = new Array();
+            var PSA_v = new Array();
+            var PSA_d = new Array();
+            var text = document.getElementById("entry").value;
+            var new_text = text.split("\n");
+            var length = new_text.length;
+            //check if the last line is blank
+            console.log("Last Element: ", new_text[length-1]);
+            console.log("Length ", length);
+            if (new_text[length-1] == "")
+            {
+                console.log("inside the if statement");
+                new_text.pop();
+                length = length-1;
+                console.log("Length ", length);
+            }
+            new_text.shift();
+            length = length-1;
+
+        
+            console.log("Length ", length);
+            for (let i = 0; i<(length);i++)
+                {
+                    console.log(i);
+                    text_no[i] = new_text[i].replace(/\s/g, "");
+                    console.log(text_no[i]);
+                }
+            var length2 = text_no.length;
+            console.log(length2);
+         
+            for (let i = 0; i<length2;i++)
+            {
+                PSA[i] = parseFloat(text_no[i].slice(4,7));
+                Dates[i] = new Date(text_no[i].slice(8,17));
+                console.log("PSA: ", PSA[i]);
+                console.log("Date: ", Dates[i]);
+            }
+
+            //var month = new Date(Dates[0]);
+            var Date_length = Dates.length;
+           
+            for (let i=0;i<Date_length;i++)
+            {
+                month[i] = Dates[i].getMonth() - Dates[i+1].getMonth() + 12 * (Dates[i].getFullYear() - Dates[i+1].getFullYear());
+                PSA_v[i] = (Math.log(PSA[i])-Math.log(PSA[i+1]))/month;
+                PSA_d[i] = Math.log(2)/PSA_v;
+                console.log("Month: ", month[i]);
+                console.log("Velocity: ", PSA_v[i]);
+                console.log("Doubling: ", PSA_d[i]);
+            }
+    */
+
+        }//end of changeMe function
+    </script> 
+</head>
+<body>
+
+<div class="div1">
+    <h1>PSA Doubling Time</h1>
+
+    <textarea id = "entry" rows="10", cols="50"></textarea>
+    <textarea id = "entry2" rows="10", cols="50"></textarea>
+    
+
+  <p><button type="button" onclick=changeMe()>Calculate</button></p>  
+  <div id="len"></div>
+  
+</div>
+</body>
+</html>
