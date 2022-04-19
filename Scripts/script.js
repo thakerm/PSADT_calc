@@ -1,3 +1,7 @@
+var cleaned;
+var inputTable;
+
+
 function onlySpaces(str) {
     return str.trim().length === 0;
 }
@@ -10,8 +14,8 @@ function changeMe() {
     console.log('PSA_text_edit', PSA_text_edit)
     //------------------
 
-    var cleaned = new Array();
-    var PSA_data = new Array();
+    cleaned = new Array();
+  
     for (const line of PSA_text_edit) {
         if (onlySpaces(line)) continue;
         if (line.startsWith("Basename")) continue;
@@ -19,6 +23,7 @@ function changeMe() {
     }
 
     console.log('cleaned', cleaned)
+    GenerateTable();
     return;
     //alert(PSA_text_edit);
 
@@ -33,10 +38,54 @@ function changeMe() {
 
 }
 
+function reset_tables() {
+    var thead
+    // fist, save the current input value
+    inputTable = document.createElement("TABLE");
+    inputTable.setAttribute("onkeyup", "UpdateCalcs();")
+
+    table_classes = "table-striped  table-sm table-bordered table-hover"
+
+    inputTable.border = "1";
+}
+
+function GenerateTable() {
+    //Build an array containing Customer records.
+    var input_label = ["PSA", "Date"]
+    var row, header;
+
+    reset_tables()
+
+    //Get the count of columns.
+    columnCount = input_label.length;
+    rowCount = cleaned.length;
+    console.log('rowCount', rowCount, 'columnCount', columnCount)
+
+    // Fill out rest of 'input_table' add the data rows
+    for (var i = 0; i < rowCount+1; i++) {  // +1 is for the header
+        var row = inputTable.insertRow(-1);
+        for (var j = 0; j < columnCount; j++) { // there is a label_column, then input value columns
+            var cell = row.insertCell(-1);  // this will be <td> element
+            if (i == 0) {
+                cell.innerHTML = input_label[j];
+            }
+            else {
+                cell.id = `input_${i}_${j}`    // we will use this tag to retrieve values for calculations
+                cell.contentEditable = true
+                cell.inputmode = "numeric"  // This does not seem to set on a table cell (need input element?)
+                //last_value = getCurrentValue('input', i, j)
+                // if (last_value != 0) cell.textContent = last_value
+                //set_input_color(cell)
+            }
+        }
+    }
+    var inputTableElem = document.getElementById("PSA_data");
+    inputTableElem.innerHTML = "";
+    inputTableElem.appendChild(inputTable);
+}
+
 function clear() {
     document.getElementById("entry").row = 10;
-
-
 }
 
 function makeTable(PSA_table, length) {
@@ -83,3 +132,4 @@ function makeTable(PSA_table, length) {
     alert(slope);
 
 }
+
