@@ -12,8 +12,14 @@
             background-color: slategray;
         }
     </style>
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script>
+    <script src="https://www.gstatic.com/charts/loader.js">
+    </script>
+    <script> 
+        google.charts.load('current', { packages: ['corechart'] });
+    </script>
 
 </head>
 
@@ -22,21 +28,24 @@
     <h1>PSA Doubling Time</h1>
 
     <textarea id="entry" rows="10" , cols="50">
-        
+
 Basename   Value Date/Time
 PSA  6.0  02/08/2012
 PSA  2.2  02/08/2010
-PSA 0.8   05/17/2005
+PSA     0.8   05/17/2005
 
 
     </textarea>
 
-    <p><button type="button" onclick=changeMe()>Calculate</button></p>
-    <p><button type="button" onclick="document.location.reload(true)">Clear</button></p>
+    <p><button type="button" class="btn btn-primary" onclick=changeMe()>Parse & Calc</button>
+        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+        <button type="button" class="bnt bnt-secondary" onclick=clearInput()>Clear</button>
+    </p>
 
 
 </div>
 
 <div id="PSA_data"></div>
+<div id="myChart" style="max-width:700px; height:400px"></div>
 
 </html>

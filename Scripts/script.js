@@ -8,6 +8,12 @@ function onlySpaces(str) {
     return str.trim().length === 0;
 }
 
+function clearInput() {
+    LOG('enter clear');
+    document.getElementById("entry").value = '';
+
+}
+
 function changeMe() {
 
     text = document.getElementById("entry").value;
@@ -124,12 +130,34 @@ function GenerateTable() {
         for_regression.push(new Array(delta_d, psa_value))
     }
 
+    // next, we reverse the array (TODO, put in time ascending order)
+    for_regression = for_regression.reverse();
     var lr = ss.linearRegression(for_regression);
     LOG('lr', lr)
+
+    // Google Chart is now used. It will also show trendlines so later we can remove simpleStatistics
+    doChart(for_regression);
 }
 
-function clear() {
-    document.getElementById("entry").row = 10;
+function doChart(dataA) {
+    dataA.unshift(new Array('Days', 'PSA'))
+    LOG(dataA)
+    drawChart(dataA);
+}
+
+function drawChart(dataArray) {
+    // Set Data
+    var data = google.visualization.arrayToDataTable(dataArray);
+    // Set Options
+    var options = {
+        title: 'Days vs PSA',
+        hAxis: { title: 'Days' },
+        vAxis: { title: 'PSA' },
+        trendlines: { 0: { type: 'linear', visibleInLegend: true, color: 'green', lineWidth: 4, showR2: true, } }    // Draw a trendline for data series 0.
+    };
+    // Draw Chart
+    var chart = new google.visualization.ScatterChart(document.getElementById('myChart'));
+    chart.draw(data, options);
 }
 
 function makeTable(PSA_table, length) {
