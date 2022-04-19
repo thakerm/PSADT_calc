@@ -111,14 +111,21 @@ function GenerateTable() {
     inputTableElem.innerHTML = "";
     inputTableElem.appendChild(inputTable);
     // we must do above before we can manipulate the 'Days' column via querySelector()
+    var for_regression = new Array();
     for (var i = 1; i < rowCount + 1; i++) {  // +1 is for the header
         idx = `#input_${i}_1`
         cell_x = document.querySelector(`#input_${i}_1`)
-        LOG('idx', idx, 'cell_x', cell_x)
+        //LOG('idx', idx, 'cell_x', cell_x)
         date_x = new Date(cell_x.innerHTML)
         delta_d = diff_days(date_x, min_date)
         document.querySelector(`#input_${i}_2`).innerHTML = delta_d
+        psa_value = parseFloat(document.querySelector(`#input_${i}_0`).innerHTML)
+        LOG(delta_d, psa_value)
+        for_regression.push(new Array(delta_d, psa_value))
     }
+
+    var lr = ss.linearRegression(for_regression);
+    LOG('lr', lr)
 }
 
 function clear() {
