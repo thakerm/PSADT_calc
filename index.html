@@ -17,7 +17,7 @@
     <!-- <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script> -->
     <script src="https://www.gstatic.com/charts/loader.js">
     </script>
-    <script> 
+    <script>
         google.charts.load('current', { packages: ['corechart'] });
     </script>
 
@@ -25,9 +25,11 @@
 
 <div>
 
-    <h1>PSA Doubling Time</h1>
-
-    <textarea id="entry" rows="10" , cols="50">
+    <h2>PSA Doubling Time</h2>
+    <div class="container-fluid" style="margin-top:60px">
+        <div class="row">
+            <div class="col-sm-4">
+                <textarea id="entry" rows="10" cols="50">
 
 Basename   Value Date/Time
 PSA  6.0  02/08/2012
@@ -35,19 +37,36 @@ PSA  2.2  02/08/2010
 PSA  1.3  01/01/2008
 PSA     0.8   05/17/2005
 
+# unused line
 
-    </textarea>
+                </textarea>
+            </div>
+            <div class="col-sm-4 float-left">
+                <h4>Derived PSA Data Table</h4>
+                <div id="PSA_data"></div>
+            </div>
+        </div>
 
-    <p><button type="button" class="btn btn-primary" onclick=changeMe()>Parse & Calc</button>
-        &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-        <button type="button" class="bnt bnt-secondary" onclick=clearInput()>Clear</button>
-    </p>
-</div>
-<hr>
-<h4>Derived PSA Data Table</h4>
-<div id="PSA_data"></div>
-<br>
-<h4>Chart</h4>
-<div id="myChart" style="max-width:800px; height:600px"></div>
+        <p><button type="button" class="btn btn-primary" onclick=changeMe()>Parse & Calc</button>
+            &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+            <button type="button" class="bnt bnt-secondary" onclick=clearInput()>Clear</button>
+        </p>
+    </div>
+    <hr>
+    <div class="container-fluid" style="margin-top:60px">
+        <div class="row">
+            <div class="col-sm-6">
+                <h4>Scatter Plot & TrendLine</h4>
+                <div id="myChart" style="max-width:800px; height:600px"></div>
+            </div>
+            <div class="col-sm-4">
+                <h4>PSA Doubling Time</h4>
+                <textarea id="psadt_months" rows="2" cols="30">
+                </textarea>
+                <textarea id="psadt_years" rows="2" cols="30">
+                </textarea>
+            </div>
+        </div>
+    </div>
 
 </html>

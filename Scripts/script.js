@@ -1,4 +1,5 @@
 var cleaned;
+const regex = /\s*PSA\s+(\d+(?:\.\d*)?)\s+(\d\d\/\d\d\/\d\d\d\d)/;
 var inputTable;
 
 var debug = true
@@ -24,6 +25,7 @@ function changeMe() {
     for (const line of PSA_text_edit) {
         if (onlySpaces(line)) continue;
         if (line.startsWith("Basename")) continue;
+        if (!line.match(regex)) continue; // line did not match need reg ex.
         cleaned.push(line)
     }
 
@@ -56,7 +58,6 @@ function GenerateTable() {
     var row, header;
     var today = new Date();
     var min_date = today;  // earliest day we have in our table (we start w/ today as being a max value)
-    const regex = /\s*PSA\s+(\d+(?:\.\d*)?)\s+(\d\d\/\d\d\/\d\d\d\d)/;
 
     reset_tables()
 
@@ -116,16 +117,23 @@ function GenerateTable() {
         document.querySelector(`#input_${i}_2`).innerHTML = delta_d
         psa_value = parseFloat(document.querySelector(`#input_${i}_0`).innerHTML)
         //LOG(delta_d, psa_value)
-        for_regression.push(new Array(delta_d, psa_value))
+        for_regression.push(new Array(delta_d, Math.log(psa_value)))
     }
-    LOG('for_regression', for_regression)
-    // next, we reverse the array (TODO, put in time ascending order)
-    for_regression = for_regression.reverse();
+    for_regression.sort(function (a, b) { return a[0] < b[0] });
+    LOG('for_regression', for_regression);
     var lr = ss.linearRegression(for_regression);
-    LOG('lr', lr)
-
+    LOG('lr', lr, typeof (lr), lr.m)
+    psadt = Math.log(2) / lr.m;
+    LOG('PSA Doubling Time', psadt, 'days')
+    psadt_months = psadt / 30.4375;
+    LOG('PSA Doubling Time', psadt_months, 'months'); // 365.25/12 for number of days in a month
+    psadt_years = psadt / 365.25;
     // Google Chart is now used. It will also show trendlines so later we can remove simpleStatistics
     doChart(for_regression);
+    psadt_months_elem = document.getElementById("psadt_months");
+    psadt_months_elem.innerHTML = psadt_months.toFixed(1) + ' Months'
+    psadt_years_elem = document.getElementById("psadt_years");
+    psadt_years_elem.innerHTML = psadt_years.toFixed(2) + ' Years'
 }
 
 function doChart(dataA) {
@@ -139,58 +147,33 @@ function drawChart(dataArray) {
     var data = google.visualization.arrayToDataTable(dataArray);
     // Set Options
     var options = {
-        title: 'Days vs PSA',
-        hAxis: { title: 'Days' },
-        vAxis: { title: 'PSA' },
-        trendlines: { 0: { type: 'linear', visibleInLegend: true, color: 'green', lineWidth: 4, showR2: true, } }    // Draw a trendline for data series 0.
+        title: 'Days vs ln(PSA)',
+        hAxis: {
+            title: 'Days',
+            titleTextStyle: { fontSize: 24 },
+            textStyle: { fontSize: 18 }
+        },
+
+        vAxis: {
+            title: 'ln(PSA) [natural log of PSA]',
+            titleTextStyle: { fontSize: 24 },
+            textStyle: { fontSize: 18 }
+        },
+        'width': 640,
+        'height': 480,
+        //'chartArea': {'width': '60%', 'height': '90%'},
+        'legend': { 'position': 'right' },
+        trendlines: {
+            0: {
+                type: 'linear',
+                visibleInLegend: true,
+                color: 'green',
+                lineWidth: 4,
+                showR2: true,
+            }
+        }    // Draw a trendline for data series 0.
     };
     // Draw Chart
     var chart = new google.visualization.ScatterChart(document.getElementById('myChart'));
     chart.draw(data, options);
 }
-
-function makeTable(PSA_table, length) {
-
-    var row = new Array();
-    var cell_info = new Array();
-    var tbl = document.getElementById("PSA_data");
-    var row_len = document.getElementById("PSA_data").getElementsByTagName('th');
-    var row_length = row_len.length;
-    var PSA_float = new Array();
-    var Dates = new Array();
-    var Months = new Array();
-    var date_1 = new Date("12/30/1899");
-    //alert(date_1.getTime());
-    var difference_in_days = new Array();
-
-    //make table
-    for (let i = 0; i < length; i++) {
-        row[i] = tbl.insertRow();
-
-        for (let x = 0; x < row_length; x++) {
-            cell_info[x] = row[i].insertCell();
-            cell_info[x].innerHTML = PSA_table[i][x];
-
-            if (x == 0 && i >= 0) {
-                PSA_float[i] = Math.log2(parseFloat(PSA_table[i][x]));
-                alert(PSA_float[i]);
-            }
-            else if (i >= 0 && x == 1) {
-                Dates[i] = new Date(PSA_table[i][x]);
-                Months[i] = Dates[i].getTime() - date_1.getTime();
-                difference_in_days[i] = Months[i] / (1000 * 3600 * 24);
-                alert(difference_in_days[i]);
-            }
-
-        }
-
-    }
-    var lr = ss.linearRegression([difference_in_days, PSA_float]);
-    var lr_values = Object.values(lr);
-    var slope = 1 / (lr_values[0]);
-    alert("LR Value next");
-    alert(lr_values[0]);
-    alert(slope);
-
-}
-
