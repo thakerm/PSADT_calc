@@ -1,5 +1,5 @@
 var cleaned;
-const regex = /\s*PSA\s+(\d+(?:\.\d*)?)\s+(\d\d\/\d\d\/\d\d\d\d)/;
+const regex = /\s*PSA\s+(\d+(?:\.\d*)?)\s+(\d{1,2}\/\d{1,2}\/\d\d\d\d)/;
 var inputTable;
 
 var debug = true
