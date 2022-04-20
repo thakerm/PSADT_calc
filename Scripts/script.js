@@ -150,13 +150,13 @@ function drawChart(dataArray) {
         title: 'Days vs ln(PSA)',
         hAxis: {
             title: 'Days',
-            titleTextStyle: { fontSize: 24 },
+            titleTextStyle: { fontSize: 24, italic: false},
             textStyle: { fontSize: 18 }
         },
 
         vAxis: {
             title: 'ln(PSA) [natural log of PSA]',
-            titleTextStyle: { fontSize: 24 },
+            titleTextStyle: { fontSize: 24, italic: false },
             textStyle: { fontSize: 18 }
         },
         'width': 640,
