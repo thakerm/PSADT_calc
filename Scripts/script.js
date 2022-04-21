@@ -1,9 +1,39 @@
 var cleaned;
-const regex = /\s*PSA\s+(\d+(?:\.\d*)?)\s+(\d{1,2}\/\d{1,2}\/\d\d\d\d)/;
+// regex may be changed by the user.
+var regex = /\s*PSA\s+(\d+(?:\.\d*)?)\s+(\d{1,2}\/\d{1,2}\/\d\d\d\d)/;
 var inputTable;
 
 var debug = true
 var LOG = debug ? console.log.bind(console) : function () { };       // will turn off all console.log statements.
+
+function validate_regex_box(){
+    var e = document.getElementById("regex")
+    var s = e.value
+    var isValid = true;
+    try {
+        regex = new RegExp(s)
+        e.style.backgroundColor = 'lightgreen'
+    } catch(err) {
+        isValid = false;
+        e.style.backgroundColor = 'lightpink'
+    }
+    LOG('validate_regex_box  isvalid', isValid, 'regex.toString()', regex.toString());
+}
+
+function show_regex() {
+    LOG('show_regex: regex.toString', regex.toString());
+    var e = document.getElementById("regex")
+    var s = regex.toString();
+    if (s.charAt(0) == '/') s = s.slice(1)
+    if (s.charAt(s.length-1) == '/') s = s.slice(0, s.length-1)
+    LOG(`show_regex {${s}}`)
+    e.value = s
+    validate_regex_box()
+}
+
+function myOnload(){
+    show_regex()
+}
 
 function onlySpaces(str) {
     return str.trim().length === 0;
@@ -12,24 +42,31 @@ function onlySpaces(str) {
 function clearInput() {
     //LOG('enter clear');
     document.getElementById("entry").value = '';
-
 }
 
 function changeMe() {
 
+    //show_regex();
     text = document.getElementById("entry").value;
     PSA_text_edit = text.split("\n");
 
-    cleaned = new Array();
 
+    cleaned = new Array();
+    discarded = ''
+    LOG('changeMe. regex.toString()', regex.toString)
     for (const line of PSA_text_edit) {
-        if (onlySpaces(line)) continue;
-        if (line.startsWith("Basename")) continue;
-        if (!line.match(regex)) continue; // line did not match need reg ex.
+       
+        if (!line.match(regex)) {
+            discarded += `\n${line}`
+            continue; // line did not match need reg ex.
+        }
         cleaned.push(line)
     }
-
-    //LOG('cleaned', cleaned)
+    
+    if (discarded.length > 0) {
+        LOG('discarded', discarded.length, discarded)
+        alert(`Discarded Lines: ${discarded}`)
+    }
     GenerateTable();
     return;
 }
@@ -119,6 +156,10 @@ function GenerateTable() {
         //LOG(delta_d, psa_value)
         for_regression.push(new Array(delta_d, Math.log(psa_value)))
     }
+    if (for_regression.length == 1){
+        alert('must have at least 2 PSA data samples')
+        return
+    }
     for_regression.sort(function (a, b) { return a[0] < b[0] });
     LOG('for_regression', for_regression);
     var lr = ss.linearRegression(for_regression);
@@ -150,7 +191,7 @@ function drawChart(dataArray) {
         title: 'Days vs ln(PSA)',
         hAxis: {
             title: 'Days',
-            titleTextStyle: { fontSize: 24, italic: false},
+            titleTextStyle: { fontSize: 24, italic: false },
             textStyle: { fontSize: 18 }
         },
 
