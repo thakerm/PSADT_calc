@@ -1,6 +1,6 @@
 var cleaned;
-// regex may be changed by the user.
-var regex = /\s*PSA\s+(\d+(?:\.\d*)?)\s+(\d{1,2}\/\d{1,2}\/\d\d\d\d)/;
+// regex may be changed by the user. Note: date and month can be 1 or 2 digits, year must be 4 digits
+var regex = /\s*PSA\s+(\d+(?:\.\d*)?)\s+(\d{1,2}\/\d{1,2}\/\d{4})/;
 var inputTable;
 
 var debug = true
