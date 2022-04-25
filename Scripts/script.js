@@ -55,7 +55,6 @@ function changeMe() {
     discarded = ''
     LOG('changeMe. regex.toString()', regex.toString)
     for (const line of PSA_text_edit) {
-       
         if (!line.match(regex)) {
             discarded += `\n${line}`
             continue; // line did not match need reg ex.
@@ -67,7 +66,7 @@ function changeMe() {
         LOG('discarded', discarded.length, discarded)
         alert(`Discarded Lines: ${discarded}`)
     }
-    GenerateTable();
+    //GenerateTable();
     return;
 }
 
