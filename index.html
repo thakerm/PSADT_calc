@@ -1,7 +1,7 @@
 <html>
 
 <head>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PSA Doubling Time Calc</title>
     <link rel="stylesheet" href="table.css">
     <script src="Scripts/script.js"></script>
@@ -36,11 +36,11 @@
         <h2>PSA Doubling Time</h2>
         <div class="container-fluid" style="margin-top:10px">
             <div class="row">
-                <div class="col-sm-4">
+                <div class="col-sm-5">
                     RegEx:<br>
                     <input id="regex" oninput=validate_regex_box() size="55">
 
-                    <textarea id="entry" rows="10" cols="50">
+                    <textarea id="entry" rows="10" cols="70">
 
 Basename   Value Date/Time
 PSA  6.0  02/08/2012
@@ -63,45 +63,47 @@ PSA-X     0.6   05/17/2005  #will ignore PSA-X
                     </div>
                 </div>
             </div>
-
-            <p><button type="button" class="btn btn-primary" onclick=parse()>Parse</button>
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
-                &nbsp;&nbsp; &nbsp;
-                &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
-                <button type="button" class="bnt bnt-secondary" onclick=clearInput()>Clear</button>
-            </p>
-        </div>
-        <hr>
-        <div class="container-fluid" style="margin-top:60px">
             <div class="row">
-                <div class="col-sm-6">
-                    <h4>Scatter Plot & TrendLine</h4>
-                    <div id="myChart" style="max-width:800px; height:500px"></div>
+                <div class="col-sm-2">
+                    <p><button type="button" class="btn btn-primary" onclick=parse()>Parse</button>
                 </div>
-                <div class=" col-sm-4 float-left">
-                    <div class="row">
-                        <h4>PSA Doubling Time</h4>
-                
-                        <textarea id="psadt_months" rows="1" cols="20">
-                    </textarea>
-                   
-                        <textarea id="psadt_years" rows="1" cols="20">
-                    </textarea>
-                
 
+                <div class="col-sm-2 float-right">
+                    <button type="button" class="bnt bnt-secondary" onclick=clearInput()>Clear</button>
                 </div>
+                </p>
             </div>
-        </div>
-        <h4>Discared Lines</h4>
-        <textarea id="discarded" rows="4" cols="50"></textarea>
+            <hr>
+            <div class="container-fluid" style="margin-top:60px">
+                <div class="row">
+                    <div class="col-sm-5">
+                        <h4>Scatter Plot & TrendLine</h4>
+                        <div id="myChart" style="max-width:800px; height:500px"></div>
+                    </div>
+                    <div class=" col-sm-4 float-left">
+                        <div class="row">
+                            <h4>PSA Doubling Time</h4>
 
-        <h3>References</h3>
-        <ul>
-            <li><a href="https://www.mdcalc.com/psa-doubling-time-psadt-calculator">mdcalc.com</a></li>
-            <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet"
-                    target="_blank">Javascript RegEx Cheatsheet</a></li>
-        </ul>
-    </div>
+                            <textarea id="psadt_months" rows="1" cols="20">
+                    </textarea>
+
+                            <textarea id="psadt_years" rows="1" cols="20">
+                    </textarea>
+
+
+                        </div>
+                    </div>
+                </div>
+                <h4>Discared Lines</h4>
+                <textarea id="discarded" rows="4" cols="50"></textarea>
+
+                <h3>References</h3>
+                <ul>
+                    <li><a href="https://www.mdcalc.com/psa-doubling-time-psadt-calculator">mdcalc.com</a></li>
+                    <li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_Expressions/Cheatsheet"
+                            target="_blank">Javascript RegEx Cheatsheet</a></li>
+                </ul>
+            </div>
 </body>
 
 </html>
