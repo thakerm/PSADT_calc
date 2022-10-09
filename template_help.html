@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PSA Doubling Input Template Help</title>
+</head>
+
+<body>
+    <h4>Explanation of Input Template</h4>
+    Text provided in the Template Input is converted to regular expressions shown at the bottom of the page. Internally
+    javascript works on regular expressions but this details is not important to most users.
+    <p>Text box is processed to extract PSA value records from each line.
+        We look for two values, a NUMBER, which can be an integer (e.g. 4) or
+        a floating point value (e.g. 3.5), and a DATE, which is expressed at present in mm/dd/yyyy format where 'mm' is
+        one or two digit month (1-12), 'dd' is one or two digit dates (1-31) and 'yyyy' is a 4 digit year. We only
+        accept 4 digit year values
+        to avoid undesirable inconsistent behavior. See:
+        <a target="_blank"
+            href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date#interpretation_of_two-digit_years">
+            two digit year issues.</a>
+    </p>
+    <p>Any other input on a line other than NUMBER and DATE are ignored. Order matters,
+    <p><code><font color=blue>NUMBER</font> <font color=red>DATE</font></code>
+    <p>is different than
+
+    <p><code><font color=red>DATE</font> <font color=blue>NUMBER</font></code>
+
+    <p>Input lines contains items of interest in different order in above two cases.
+    <p>As values other than NUMBER and
+        DATE are not extracted no other text needs to be provided. However, if the line contains multiple entries
+        of type
+        that we care about, eg the PSA NUMBER, you can
+        provide additional text to help disambiguate which NUMBER counts. For example, if line is
+    <p>
+        <code>  SAMPLE 3.5  LAB-1    2.2   03/05/2021</code>
+    <p>
+        and PSA value to be used is 2.2 (and not 3.5 which is some other text not relevant to us), then  Input
+        template can be simply
+    <p>
+        <code> LAB NUMBER DATE</code>
+    <p>which tells us to extract number that comes *after* text "LAB" in the input line. Thus, the number 3.5 in sample line above, being
+        before "LAB" is ignored. (The template, as mentioned, tells us that NUMBER we are looking for comes *after* text "LAB".)
+    </p>
+    <p>
+        In most use cases lines of text
+        will
+        only consist of a single NUMBER and a single DATE (in either order that should match the Input Template field.) 
+        In these cases the Input Template only needs to be either "NUMBER DATE"  or "DATE NUMBER". Extra text 
+        is only needed if complex parsing is required as in example line "SAMPLE 3.5  LAB-1    2.2   03/05/2021" 
+        shown above.
+        Drop down
+        choices of Input Template entry provides the standard choices discussed. You can customize as needed, or for expert use you can modify the 
+        regular Expression box at the bottom directly. 
+        <p>In all cases user should check the "Derived PSA Datatable" and satisfy that correct values are extracted from raw text input before
+            hitting "Calc" button to obtain PSA Doubling time.
+</body>
+
+</html>
