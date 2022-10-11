@@ -141,9 +141,40 @@ function reset_tables() {
   parsedTable.border = "5";
 }
 
+function createCheckBox(parentCell, rowNum) {
+  // creating checkbox element
+  var checkbox = document.createElement("input");
+
+  // Assigning the attributes
+  // to created checkbox
+  checkbox.type = "checkbox";
+  checkbox.name = "name";
+  checkbox.value = "value";
+  checkbox.id = "id";
+  checkbox.checked = true;
+
+  // creating label for checkbox
+  var label = document.createElement("label");
+
+  // assigning attributes for
+  // the created label tag
+  label.htmlFor = "id";
+
+  // appending the created text to
+  // the created label tag
+  label.appendChild(document.createTextNode(""));
+
+  // appending the checkbox
+  // and label to div
+  parentCell.appendChild(checkbox);
+  parentCell.appendChild(label);
+  checkbox.id = `derived_table_row_${rowNum}_checkbox`;
+  return checkbox;
+}
+
 function GenerateTable(cleaned) {
   //Build an array containing Customer records.
-  var input_label = ["PSA", "Date", "Days", "ln(PSA)"];
+  var input_label = ["PSA", "Date", "Days", "ln(PSA)", "Include in Calc"];
 
   reset_tables(); // parsedTable  will be reset after this call.
 
@@ -173,6 +204,7 @@ function GenerateTable(cleaned) {
       // there is a label_column, then input value columns
       var cell;
       if (i == 0) {
+        // heading row
         cell = document.createElement("TH");
         cell.innerHTML = input_label[j]; // header values
         row.appendChild(cell);
@@ -191,6 +223,10 @@ function GenerateTable(cleaned) {
             val = match.groups.date;
           }
           cell.innerHTML = val;
+        } else if (j == 4) {
+          // this will be the 'include in calc' checkbox
+          cbox = createCheckBox(cell, i);
+          cell.style.textAlign = "center"; // TODO, not centering
         } else {
           cell.innerHTML = ""; // init the 'days' column with empty string
         }
@@ -203,13 +239,19 @@ function GenerateTable(cleaned) {
 }
 
 function update_table(do_calc = 0) {
+  // gets called with do_calc=1 when calculations are to be done.
   var PSA_data_Elem = document.getElementById("PSA_data");
   PSA_data_Elem.innerHTML = "";
   PSA_data_Elem.appendChild(parsedTable);
   // we must do above before we can manipulate the 'Days' column via querySelector()
   var for_regression = new Array();
   for (var i = 1; i < rowCount + 1; i++) {
-    // +1 is for the header
+    // +1 as we have to skip  the header row (which is row 0)
+
+    // if the row is not selected it is not included in doubling time calculations
+    cbox = document.querySelector(`#derived_table_row_${i}_checkbox`)
+    if (cbox.checked == false) continue;
+
     cell_psa = document.querySelector(`#input_${i}_0`);
     psa_value = parseFloat(cell_psa.innerHTML);
     cell_psa.align = "right";
