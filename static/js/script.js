@@ -235,7 +235,7 @@ function GenerateTable(cleaned) {
     }
   }
 
-  update_table(0);
+  update_table(1);
 }
 
 function update_table(do_calc = 0) {
