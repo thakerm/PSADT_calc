@@ -6,7 +6,7 @@ var regex = null; // will be initialized from regex_template and this what is us
 //var regex = /(\d+(?:\.\d*)?).+(\d{1,2}\/\d{1,2}\/\d{4})/;
 
 var parsedTable; // this table is created at runtime.
-var min_date = new Date(); // earliest day we have in our table (we start w/ today as being a max value)
+var min_date; // earliest day we have in our table (we start w/ today as being a max value)
 var discaredElem;
 
 var debug = true;
@@ -17,7 +17,7 @@ function validate_regex_box() {
   var s = e.value;
   var isValid = true;
   try {
-    regex = new RegExp(s);           // this is what gets used in parsing inputs.
+    regex = new RegExp(s); // this is what gets used in parsing inputs.
     e.style.backgroundColor = "lightgreen";
   } catch (err) {
     isValid = false;
@@ -90,7 +90,7 @@ function update_num_discarded(n) {
 function parse() {
   text = document.getElementById("entry").value;
   PSA_text_edit = text.split("\n");
-
+  min_date = new Date();
   cleaned = new Array();
   discarded = "";
   num_discarded = 0; // number of lines discarded
