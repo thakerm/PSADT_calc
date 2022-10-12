@@ -145,30 +145,29 @@ function createCheckBox(parentCell, rowNum) {
   // creating checkbox element
   var checkbox = document.createElement("input");
 
-  // Assigning the attributes
-  // to created checkbox
+  // Assigning the attributes to created checkbox
+  myId = `derived_table_row_${rowNum}_checkbox`;
   checkbox.type = "checkbox";
-  checkbox.name = "name";
-  checkbox.value = "value";
-  checkbox.id = "id";
+  checkbox.name = myId;
+  checkbox.value = myId;
   checkbox.checked = true;
+  checkbox.id = myId;
+  checkbox.onchange = function () {
+    update_table(1);
+  };
 
   // creating label for checkbox
   var label = document.createElement("label");
 
-  // assigning attributes for
-  // the created label tag
-  label.htmlFor = "id";
+  // assigning attributes for the created label tag
+  label.htmlFor = myId;
 
-  // appending the created text to
-  // the created label tag
-  label.appendChild(document.createTextNode(""));
+  // appending the created text to the created label tag
+  label.appendChild(document.createTextNode("")); // we need no label in our use, just the checkbox
 
-  // appending the checkbox
-  // and label to div
+  // appending the checkbox  and label to div
   parentCell.appendChild(checkbox);
   parentCell.appendChild(label);
-  checkbox.id = `derived_table_row_${rowNum}_checkbox`;
   return checkbox;
 }
 
@@ -211,24 +210,30 @@ function GenerateTable(cleaned) {
       } else {
         cell = row.insertCell(-1);
         cell.id = `input_${i}_${j}`; // we will use this tag to retrieve values for calculations
-        cell.contentEditable = true;
-        //cell.inputmode = "numeric"  // This does not seem to set on a table cell (need input element?)
+        cell.contentEditable = false; // by default all the cells are not editable (will change some below)
         //set_input_color(cell)
         if (j <= 1) {
           //LOG(i,j,'match',match)
           if (j == 0) {
-            val = match.groups.number;
+            val = match.groups.number; // PSA measurement
+            //cell.inputmode = "numeric"  // This does not seem to set on a table cell (need input element?)
           }
           if (j == 1) {
-            val = match.groups.date;
+            val = match.groups.date; // date of measurement
           }
           cell.innerHTML = val;
+          // TODO, for now we leave this uneditable till we take care of onchange.
+          cell.contentEditable = true; // these two values can be changed by the user.
+          cell.onchange = function () {
+            LOG("cell.onchange");
+            update_table(1);
+          };
         } else if (j == 4) {
           // this will be the 'include in calc' checkbox
           cbox = createCheckBox(cell, i);
-          cell.style.textAlign = "center"; // TODO, not centering
+          cell.style.textAlign = "center";
         } else {
-          cell.innerHTML = ""; // init the 'days' column with empty string
+          cell.innerHTML = ""; // init the 'days' column with empty string (will be filled later)
         }
         LOG(i, j, cell);
       }
@@ -249,12 +254,13 @@ function update_table(do_calc = 0) {
     // +1 as we have to skip  the header row (which is row 0)
 
     // if the row is not selected it is not included in doubling time calculations
-    cbox = document.querySelector(`#derived_table_row_${i}_checkbox`)
+    cbox = document.querySelector(`#derived_table_row_${i}_checkbox`);
     if (cbox.checked == false) continue;
 
     cell_psa = document.querySelector(`#input_${i}_0`);
     psa_value = parseFloat(cell_psa.innerHTML);
     cell_psa.align = "right";
+    LOG("update_table  psa_value", psa_value);
 
     cell_date = document.querySelector(`#input_${i}_1`);
     cell_date.align = "right";
@@ -315,7 +321,14 @@ function drawChart(dataArray) {
   var data = google.visualization.arrayToDataTable(dataArray);
   // Set Options
   var options = {
-    title: "Days vs ln(PSA) xx",
+    title: `Days vs ln(PSA)  [${dataArray.length - 1} points provided]`, // - 1 as there is a heading row
+    titleTextStyle: {
+      color: "purple", // any HTML string color ('red', '#cc00cc')
+      fontName: "Times New Roman", // i.e. 'Times New Roman'
+      fontSize: 18, // 12, 18 whatever you want (don't specify px)
+      bold: true, // true or false
+      italic: false, // true of false
+    },
     hAxis: {
       title: "Days",
       titleTextStyle: { fontSize: 16, italic: false },
