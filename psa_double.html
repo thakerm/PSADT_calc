@@ -100,15 +100,23 @@
           <div class="row">
             <div class="col">
             <textarea id="entry" rows="10" cols="57" placeholder="Please copy and paste your PSA data here. No need to edit">
-    Basename	Value	Date/Time
-   •	PSA, CANCER MONITORING	15.2 (H)	03/07/2022
-   •	PSA, CANCER MONITORING	12.8 (H)	03/05/2022
-   •	PSA, CANCER MONITORING	9.6 (H)	12/06/2021
-   •	PSA                   	   3.5	01/11/2021
-   •	PSA                   	   1.4	01/03/2020
-   •	PSA                   	   0.8	01/11/2019
-                     
-   # unused line
+              Test Result	Value	Date/Time
+              •	PSA	10.5 (H)	10/21/2022
+              •	PSA	11.6 (H)	04/11/2022
+              •	PSA	12.4 (H)	10/03/2021
+              •	PSA	20.1 (H)	04/04/2021
+              •	PSA	25.7 (H)	07/10/2020
+              •	PSA	21.1 (H)	01/17/2020
+              •	PSA	20.3 (H)	08/23/2019
+              •	PSA	21.3 (H)	07/23/2019
+              •	PSA	18.5 (H)	07/01/2019
+              •	PSA	11.8 (H)	05/01/2018
+              •	PSA	10.9 (H)	08/22/2017
+              •	PSA	10.8 (H)	01/06/2017
+              
+              Test Result	Value	Date/Time
+              •	PSA FREE  	     0.9  	04/14/2005
+              •	PSA % FREE	    13.2 (L)	04/14/2005
                         
 
                           </textarea
@@ -174,7 +182,7 @@
         <div class="col-4">
           <div id="PSA_data"></div>
         </div>
-        <div class="col-2">
+        <div class="col-auto">
           <div class="input-group">
             <input readonly class = "form-control" id="psadt_months"> 
             <div class="input-group-append">
@@ -183,7 +191,7 @@
             </div>
           </div>
           <p></p>
-          <div class="input-group ">
+          <div class="input-group col-auto">
             <input readonly class = "form-control" id="psadt_years" aria-describedby="basic-addon2" placeholder="PSA doubling time" aria-label="PSA doubling time in years"> 
             <div class="input-group-append">
               <button class="btn btn-outline-success" id="psadt_years_button" type="button" onclick="copyPaste('#psadt_years','#psadt_years_button')">Copy</button>

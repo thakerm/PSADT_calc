@@ -29,9 +29,20 @@ function validate_regex_box() {
 function raw_regex(r) {
   // drops the starting and ending '/' of a regex string representation
   // which confuses the process of going back and forth from RegExp to regex_string representation
+  LOG("R",r);
   ans = r.toString();
-  if (ans.charAt(0) == "/") ans = ans.slice(1);
-  if (ans.charAt(ans.length - 1) == "/") ans = ans.slice(0, ans.length - 1);
+  LOG("ans length", ans.length);
+  if (ans.charAt(0) == "/") 
+  {
+    ans = ans.slice(1);
+    //LOG("ans slice:", ans);
+  }
+  if (ans.charAt(ans.length - 1) == "/") 
+  {
+    //LOG("char at length -1: ",ans.charAt(ans.length - 1) );
+    ans = ans.slice(0, ans.length - 1);
+  }
+  //LOG("ans:", ans);
   return ans;
 }
 
@@ -39,7 +50,9 @@ function template_to_regex_str() {
   var e = document.getElementById("regex_template");
   var s = e.value;
   var orig = s.slice();
+ 
   processed = orig.replace(/\s+/g, raw_regex(RegExp(/.+?/).toString()));
+
   processed = processed.replace(
     /NUMBER/i,
     raw_regex(RegExp(/\b(?<number>\d+(?:\.\d*)?)\b/).toString())
@@ -98,10 +111,15 @@ function parse() {
   discarded = "";
   num_discarded = 0; // number of lines discarded
   LOG("parse: regex.toString()", regex.toString);
-  for (const line of PSA_text_edit) {
+  for (const line of PSA_text_edit) 
+  {
+    if(line.match(/(FREE)/))
+      continue;
+
     m = line.match(regex);
-    LOG("m", m);
+   
     if (!m) {
+    
       // does this line match our regEx? If not....
       if (!onlySpaces(line)) {
         // just ignore blank lines totally
