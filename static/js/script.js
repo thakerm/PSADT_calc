@@ -114,7 +114,16 @@ function parse() {
   for (const line of PSA_text_edit) 
   {
     if(line.match(/(FREE)/))
+    {
+      if (discarded != "") {
+        // need to add  new line if have some previous
+        discarded += "\n";
+      }
+      discarded += `${line}`;
+      num_discarded++;
       continue;
+    }
+      
 
     m = line.match(regex);
    
