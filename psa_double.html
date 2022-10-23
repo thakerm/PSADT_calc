@@ -7,46 +7,79 @@
     <script src="static/js/script.js"></script>
     <script src="https://unpkg.com/simple-statistics@7.7.5/dist/simple-statistics.min.js"></script>
     <style>
-      .table-hover > tbody > tr:hover {
-        background-color: slategray;
-      }
+      
 
-      #psadt_months {
-        background-color: lightpink;
-      }
-
-      #psadt_years {
-        background-color: lightsalmon;
-      }
+      
     </style>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+      rel="stylesheet"/>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/js-cookie@rc/dist/js.cookie.min.js"></script> -->
     <script src="https://www.gstatic.com/charts/loader.js"></script>
     <script>
       google.charts.load("current", { packages: ["corechart"] });
     </script>
+    
   </head>
 
   <body onload="myOnload()">
     <div class="container">
-      <h2>PSA Doubling Time</h2>
-      <hr />
+      
+      <p><h2>PSA Doubling Time Calculator</h2></p>
+      
+          <button type="button" class="btn btn-danger btn-sm col-auto" data-bs-toggle="modal" data-bs-target="#myModal">
+        Help</button>
+      <p></p>
+    
+      
+      <!-- The Modal WORK IN PROGRESS -->
+      <div class="modal" id="myModal">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+      
+            <!-- Modal Header -->
+            <div class="modal-header">
+              <h4 class="modal-title">PSA Doubling Time Help</h4>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+      
+            <!-- Modal body -->
+            <div class="modal-body">
+              <p>Simply copy and paste PSA data directly from Epic EMR into the textbox. 
+              The website will automatically sort the data and calculate PSA Doubling Time.</p>
+              <img src="PSA help picture.png" alt="PSA Help">
+    
+              <p>Advanced features shows additional data processing information and option to manually edit Regular Expression</p>
+              <p>Scatter plot: shows a scatter plot </p>
+              
+            </div>
+      
+            <!-- Modal footer -->
+            <div class="modal-footer">
+              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+            </div>
+      
+          </div>
+        </div>
+      </div>
+      
       <div class="row">
-        <div class="col-auto">
-          <h5>
-            Input Template
-            <font size="-1">
-              (select or enter custom):
-              <a href="template_help.html" target="_blank">Help</a>
-            </font>
-          </h5>
-          <div>
-            <!-- <input id="regex_template"  oninput=template_to_regex_str()  size="55"></input> -->
+        <div class="col" >
+          
+          <div id="inputtemplate" style="display: none">
 
+           <h5>
+              Input Template
+              <font size="-1">
+                (select or enter custom):
+                <a href="help.html" target="_blank">Help</a>
+              </font>
+             
+            </h5>
+          
+            <!-- <input id="regex_template"  oninput=template_to_regex_str()  size="55"></input> -->
+          
             <input
               list="templates"
               oninput="template_to_regex_str()"
@@ -59,10 +92,14 @@
               <option value="DATE NUMBER"></option>
               <option value="Enter Custom"></option>
             </datalist>
+            <P></P>
+          
+          
           </div>
-          <h5>Input TextBox</h5>
-          <div>
-            <textarea id="entry" rows="10" cols="57">
+       
+          <div class="row">
+            <div class="col">
+            <textarea id="entry" rows="10" cols="57" placeholder="Please copy and paste your PSA data here. No need to edit">
     Basename	Value	Date/Time
    •	PSA, CANCER MONITORING	15.2 (H)	03/07/2022
    •	PSA, CANCER MONITORING	12.8 (H)	03/05/2022
@@ -77,9 +114,9 @@
                           </textarea
             >
           </div>
-
+        </div>
           <div class="row">
-            <div class="col-10">
+            <div class="col-auto">
               <p>
                 <button type="button" class="btn btn-primary" onclick="parse()">
                   Parse & Calc
@@ -87,59 +124,105 @@
               </p>
             </div>
 
-            <div class="col-2">
-              <button type="button" class="bnt bnt-secondary" onclick="clearInput()">
+            <div class="col-auto">
+              <button type="button" class="btn btn-secondary" onclick="clearInput()">
                 Clear
               </button>
             </div>
           </div>
-        </div>
-        <div class="col-auto">
-          <h4 class="derived">Derived PSA Data Table</h4>
           <div class="row">
-            <div id="PSA_data"></div>
-            <div>
-              <button
-                type="button"
-                class="btn btn-primary btn-sm mb-3"
-                onclick="update_table(1)"
-              >
-                Calc
-              </button>
+
+            <div class="col">
+            
+          <input type="checkbox"  id="advanced" value="Advanced Features" onclick="advancedToggle()">
+          <label for="advanced">Advanced Features</label>
+          
+        </div>
+        </div>
+
+        <div  id="discardTemplate" style="display: none">
+          <div class="row" >
+            <div class="col-auto">
+              <h4 class="derived">Discarded Lines</h4>
+              <textarea id="discarded" rows="4" cols="50"></textarea>
+              <div id="num_discarded"></div>
+            </div>
+            <div class="col-auto">
+              <h4 class="derived">Input Template to RegExp</h4>
+              <textarea
+                id="regex"
+                oninput="validate_regex_box()"
+                rows="4"
+                cols="50"
+              ></textarea>
             </div>
           </div>
+          <hr>
         </div>
+        
       </div>
-      <hr />
+   
+    <div id="PSA_calc" style="display: none" class="container">
+      <p></p>
       <div class="row">
-        <div class="col-auto">
-          <h4 class="derived">Scatter Plot & TrendLine</h4>
-          <div id="myChart" style="width: 600px; height: 400px"></div>
+        <div class="col-4">
+        <h4 class="derived">Derived PSA Data Table</h4></div>
+        <div class="col-4"><h4 class="derived">PSA Doubling Time</h4></div>
+        
+      </div>
+      <div class="row">
+        <div class="col-4">
+          <div id="PSA_data"></div>
         </div>
-        <div class="col-auto">
-          <h4 class="derived">PSA Doubling Time</h4>
-          <textarea id="psadt_months" readonly rows="1" cols="12"> </textarea>
-          <br />
+        <div class="col-2">
+          <div class="input-group">
+            <input readonly class = "form-control" id="psadt_months"> 
+            <div class="input-group-append">
+              <button id = "psadt_months_button" class="btn btn-outline-success" type="button" onclick="copyPaste('#psadt_months','#psadt_months_button')">Copy</button>
+        
+            </div>
+          </div>
+          <p></p>
+          <div class="input-group ">
+            <input readonly class = "form-control" id="psadt_years" aria-describedby="basic-addon2" placeholder="PSA doubling time" aria-label="PSA doubling time in years"> 
+            <div class="input-group-append">
+              <button class="btn btn-outline-success" id="psadt_years_button" type="button" onclick="copyPaste('#psadt_years','#psadt_years_button')">Copy</button>
+            </div>
+          </div>
+        
+          
+        
+        </div>
+        
+        <div class="row align-items-end">
+          <div class="col">
+           <p></p> <input type="checkbox"  id="scatter" value="Scatter_Plot" onclick="scatterPlot()">
+            <label for="scatter">Show Scatter Plot</label>
+          </div>
+        </div>
+        
 
-          <textarea id="psadt_years" readonly rows="1" cols="12"> </textarea>
-        </div>
+      
       </div>
-      <div class="row">
-        <div class="col-auto">
-          <h4 class="derived">Discarded Lines</h4>
-          <textarea id="discarded" rows="4" cols="50"></textarea>
-          <div id="num_discarded"></div>
-        </div>
-        <div class="col-auto">
-          <h4 class="derived">Input Template to RegExp</h4>
-          <textarea
-            id="regex"
-            oninput="validate_regex_box()"
-            rows="4"
-            cols="50"
-          ></textarea>
-        </div>
+      
+    
+      
       </div>
+      
+    
+    </div>
+  
+    <p></p>
+    <div  id="scatterplotdiv" style="display: none">
+      <div class="col-auto">
+       
+        <h4 class="derived">Scatter Plot & TrendLine</h4>
+        <div id="myChart"></div>
+      </div>
+    </div>
+  
+   
+      
       <h3>References</h3>
       <ul>
         <li>
@@ -156,5 +239,6 @@
         </li>
       </ul>
     </div>
+    
   </body>
 </html>

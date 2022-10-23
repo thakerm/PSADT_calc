@@ -81,6 +81,7 @@ function onlySpaces(str) {
 function clearInput() {
   //LOG('enter clear');
   document.getElementById("entry").value = "";
+  document.getElementById("PSA_calc").setAttribute("style","display:none");
 }
 
 function update_num_discarded(n) {
@@ -88,7 +89,9 @@ function update_num_discarded(n) {
   e.innerHTML = `Number of non-blank lines discarded = ${n}`;
 }
 function parse() {
+ 
   text = document.getElementById("entry").value;
+  document.getElementById("PSA_calc").setAttribute("style","display:block");
   PSA_text_edit = text.split("\n");
   min_date = new Date();
   cleaned = new Array();
@@ -136,9 +139,9 @@ function reset_tables() {
   parsedTable = document.createElement("TABLE");
   //parsedTable.setAttribute("onkeyup", "UpdateCalcs();")
 
-  table_classes = "table-striped  table-sm table-bordered table-hover table-primary PSA";
+  table_classes = "table-striped  table-sm table-hover table-primary PSA";
   parsedTable.setAttribute("class", table_classes);
-  parsedTable.border = "5";
+  
 }
 
 function createCheckBox(parentCell, rowNum) {
@@ -305,9 +308,9 @@ function do_regression(for_regression) {
   // Google Chart is now used. It will also show trendlines so later we can remove simpleStatistics
   doChart(for_regression);
   psadt_months_elem = document.getElementById("psadt_months");
-  psadt_months_elem.innerHTML = psadt_months.toFixed(1) + " Months";
+  psadt_months_elem.value = psadt_months.toFixed(1) + " Months";
   psadt_years_elem = document.getElementById("psadt_years");
-  psadt_years_elem.innerHTML = psadt_years.toFixed(2) + " Years";
+  psadt_years_elem.value = psadt_years.toFixed(2) + " Years";
 }
 
 function doChart(dataA) {
@@ -318,6 +321,7 @@ function doChart(dataA) {
 
 function drawChart(dataArray) {
   // Set Data
+ 
   var data = google.visualization.arrayToDataTable(dataArray);
   // Set Options
   var options = {
@@ -359,3 +363,48 @@ function drawChart(dataArray) {
   var chart = new google.visualization.ScatterChart(document.getElementById("myChart"));
   chart.draw(data, options);
 }
+
+function scatterPlot()
+{
+  var scatterPlotDiv = document.getElementById("scatterplotdiv");
+  var scatterCheckBox = document.getElementById("scatter");
+  if (scatterCheckBox.checked==true)
+  {
+    scatterPlotDiv.style.display="block";
+  }
+  else
+  {
+    scatterPlotDiv.style.display="none";
+  }
+}
+
+function advancedToggle()
+{
+  var inputtemplate = document.getElementById("inputtemplate");
+  var advancedCheckBox = document.getElementById("advanced");
+  var discardTemplate = document.getElementById("discardTemplate");
+  if (advancedCheckBox.checked==true)
+  {
+    inputtemplate.style.display="block";
+    discardTemplate.style.display="block";
+  }
+  else
+  {
+    inputtemplate.style.display="none";
+    discardTemplate.style.display="none";
+  }
+
+}
+
+function copyPaste (copy_paste, button_id)
+{
+  var copyText = document.querySelector(copy_paste);
+  copyText.select();
+  copyText.setSelectionRange(0, 99999); // For mobile devices
+  navigator.clipboard.writeText("PSA Doubling Time: " + copyText.value);x
+  document.querySelector(button_id).className="btn btn-success";
+  document.querySelector(button_id).innerHTML="Copied";
+  
+}
+
+
