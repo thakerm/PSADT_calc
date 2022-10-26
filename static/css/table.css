@@ -1,0 +1,78 @@
+.PSA {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 50%;
+    
+  }
+  
+  .PSA td, .PSA th {
+    border: 1px solid #ddd;
+    padding: 4px;
+  }
+  
+  .PSA tr:nth-child(even){background-color: #f2f2f2;}
+  
+  .PSA tr:hover {background-color: lightblue}
+  
+  .PSA th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #f2c9f1;
+    color: white;
+  }
+
+  .derived {
+    color: purple;
+  }
+
+  #psadt_months{
+    font-weight: bold;
+    background-color: lightgreen;
+    text-align: center;
+    border-color: black;
+   
+    
+  }
+
+  #psadt_years{
+  
+    font-weight: bold;
+    background-color: lightgreen;
+    text-align: center;
+    border-color: black;
+    
+    
+  }
+
+  #psadt_months_button{
+    border-color: black;
+    width: 75px;
+   
+
+  }
+  #psadt_years_button{
+    border-color: black;
+    width: 75px;
+  }
+
+  .table-hover > tbody > tr:hover {
+    background-color: lightgray;
+  }
+
+  #container{
+    margin-top: 10px;
+    width: auto;
+  }
+
+  #discarded{
+    text-align: left;
+    vertical-align: text-top;
+    overflow: auto;
+  }
+
+  #title{
+    text-align: center;
+    background-color: lightyellow;
+
+  }
