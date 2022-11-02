@@ -24,75 +24,67 @@
   </head>
 
   <body onload="myOnload()">
-    <div class="container border" id="container">
+  
+    <!--Navbar-->
+    <nav class="navbar bg-dark navbar-dark container-sm w-50">
+      <span class="navbar-brand">PSA Doubling Time Calculator</span>
+      <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">Help</button>
+    </nav>
 
-      <div class="row">
-        <div class="col" id="title">
-        <p id="title"><h2 id="title">PSA Doubling Time Calculator</h2></p>
-        </div>
-      </div>
-      
-      
-      <div class="row align-self-end">
-        <div class="col-auto">
-          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#myModal">
-        Help</button>
-        </div>
-      </div>
-      <p></p>
-      
+    <div class="container-sm w-50 " id="container">
     
       
-      <!-- The Modal WORK IN PROGRESS -->
-      <div class="modal" id="myModal">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-      
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title">PSA Doubling Time Help</h4>
-              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-            </div>
-      
-            <!-- Modal body -->
-            <div class="modal-body">
-              <p>This is a PSA doubling time calculator desgined to work with Kaiser Nor Cal PSA data.
-                <br>
-                <br>
-                <b>Instructions: </b>
-                <ol>
-                  <li>Copy and paste ".lastpsa" or ".allpsa" PSA from HealthConnect into the white textarea.</li>
-                  <li>Hit the blue button "Parse & Calc". This will automatically sort through the data, remove unwanted text/spaces and PSA Free data. </li>
-                  <li>The PSA data is shown in a table along with the PSA Doubling Time in months and years. </li>
-                  <li>Use the copy button to copy the results to your clipboard for easy copy and paste into your note. </li>
-                </ol>
-                <b>Advanced Features</b><br>
-                <ol>
-                  <li>Discarded Lines: Shows all data removed during data processing</li>
-                  <li>Regular Expression: This is for advanced users who would like to modify the regular expression to allow for custom PSA data inputs.</li>
-                </ol>
-                <video width="720" height="720" autoplay loop>
-                  <source src="PSADT 720.mp4" type="video/mp4">
-                </video>
-              </p>
-              <p>Feedback or Suggestions please email me: thakerm@gmail.com</p>
-             
-  
-            </div>
-      
-            <!-- Modal footer -->
-            <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-            </div>
-      
+    <!-- The Modal WORK IN PROGRESS -->
+    <div class="modal" id="myModal">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+    
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">PSA Doubling Time Help</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
           </div>
+    
+          <!-- Modal body -->
+          <div class="modal-body">
+            <p>This is a PSA doubling time calculator desgined to work with Kaiser Nor Cal PSA data.
+              <br>
+              <br>
+              <b>Instructions: </b>
+              <ol>
+                <li>Copy and paste ".lastpsa" or ".allpsa" PSA from HealthConnect into the white textarea.</li>
+                <li>Hit the blue button "Parse & Calc". This will automatically sort through the data, remove unwanted text/spaces and PSA Free data. </li>
+                <li>The PSA data is shown in a table along with the PSA Doubling Time in months and years. </li>
+                <li>Use the copy button to copy the results to your clipboard for easy copy and paste into your note. </li>
+              </ol>
+              <b>Advanced Features</b><br>
+              <ol>
+                <li>Discarded Lines: Shows all data removed during data processing</li>
+                <li>Regular Expression: This is for advanced users who would like to modify the regular expression to allow for custom PSA data inputs.</li>
+              </ol>
+              <video width="720" height="720" autoplay loop>
+                <source src="PSADT 720.mp4" type="video/mp4">
+              </video>
+            </p>
+            <p>Feedback or Suggestions please email me: thakerm@gmail.com</p>
+           
+
+          </div>
+    
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+          </div>
+    
         </div>
       </div>
-      
+    </div>
+     
+      <!--Input Template Box-->
       <div class="row">
         <div class="col" >
           
-          <div id="inputtemplate" style="display: none">
+          <div id="inputtemplate" style="display: block">
 
            <h5>
               Input Template
@@ -113,10 +105,11 @@
               type="search"
             />
             <datalist id="templates">
-              <option value="NUMBER DATE"></option>
-              <option value="DATE NUMBER"></option>
+              <option value="PSA DATE"></option>
+              <option value="DATE PSA"></option>
               <option value="Enter Custom"></option>
             </datalist>
+
             <P></P>
           
           
@@ -126,26 +119,21 @@
             <div class="col">
             <textarea  id="entry" rows="10" cols="57" placeholder="Please copy and paste your PSA data here. No need to edit">
               Test Result	Value	Date/Time
-              •	PSA	10.5 (H)	10/21/2022
-              •	PSA	11.6 (H)	04/11/2022
-              •	PSA	12.4 (H)	10/03/2021
-              •	PSA	20.1 (H)	04/04/2021
-              •	PSA	25.7 (H)	07/10/2020
-              •	PSA	21.1 (H)	01/17/2020
-              •	PSA	20.3 (H)	08/23/2019
-              •	PSA	21.3 (H)	07/23/2019
-              •	PSA	18.5 (H)	07/01/2019
-              •	PSA	11.8 (H)	05/01/2018
-              •	PSA	10.9 (H)	08/22/2017
-              •	PSA	10.8 (H)	01/06/2017
-              
-              Test Result	Value	Date/Time
-              •	PSA FREE  	     0.9  	04/14/2005
-              •	PSA % FREE	    13.2 (L)	04/14/2005
+•	PSA	8.1 (H)	05/25/2022
+•	PSA	6.5 (H)	10/12/2021
+•	PSA	7.1 (H)	05/12/2021
+•	PSA	5.7 (H)	03/12/2021
+•	PSA	6.1 (H)	05/29/2020
+•	PSA	5.6 (H)	07/23/2019
+•	PSA	   5.0	09/10/2018
+•	PSA	   4.7	04/25/2018
+•	PSA	   5.9	08/18/2017
+•	PSA	   5.1	07/13/2016
+•	PSA	   5.6	12/03/2015
+•	PSA	   6.3	06/03/2015
                         
               </textarea>
-              
-                          
+                    
           </div>
         </div>
           <div class="row">
@@ -252,6 +240,10 @@
       
       <h3>References</h3>
       <ul>
+        <li>
+          <a href="https://www.mskcc.org/nomograms/prostate/psa_doubling_time">MSK PSA Doubling Time Calculator</a>
+
+        </li>
         <li>
           <a href="https://www.mdcalc.com/psa-doubling-time-psadt-calculator"
             >mdcalc.com</a

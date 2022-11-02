@@ -12,6 +12,9 @@ var discaredElem;
 var debug = true;
 var LOG = debug ? console.log.bind(console) : function () {}; // will turn off all console.log statements.
 
+
+
+
 function validate_regex_box() {
   var e = document.getElementById("regex");
   var s = e.value;
@@ -154,6 +157,7 @@ function parse() {
     discardedElem.value = discarded;
     update_num_discarded(num_discarded);
   }
+  //if(!cleaned(0).test
   GenerateTable(cleaned);
   return;
 }
