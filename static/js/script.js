@@ -1,6 +1,7 @@
 var cleaned;
 // regex may be changed by the user. Note: date and month can be 1 or 2 digits, year must be 4 digits
-var regex_template = "NUMBER DATE";
+var regex_template = "PSA DATE";
+var regex_template_2= "DATE PSA";
 //var regex = /PSA(?:\s*,?\s*(?:(?:CANCER MONITORING)|SCREENING))?\s+(\d+(?:\.\d*)?)\s+(?:\(H\)\s+)?(\d{1,2}\/\d{1,2}\/\d{4})/;
 var regex = null; // will be initialized from regex_template and this what is used to parse input
 //var regex = /(\d+(?:\.\d*)?).+(\d{1,2}\/\d{1,2}\/\d{4})/;
@@ -8,6 +9,7 @@ var regex = null; // will be initialized from regex_template and this what is us
 var parsedTable; // this table is created at runtime.
 var min_date; // earliest day we have in our table (we start w/ today as being a max value)
 var discaredElem;
+var checker = 0;
 
 var debug = true;
 var LOG = debug ? console.log.bind(console) : function () {}; // will turn off all console.log statements.
@@ -16,11 +18,13 @@ var LOG = debug ? console.log.bind(console) : function () {}; // will turn off a
 
 
 function validate_regex_box() {
+
   var e = document.getElementById("regex");
   var s = e.value;
   var isValid = true;
   try {
     regex = new RegExp(s); // this is what gets used in parsing inputs.
+
     e.style.backgroundColor = "lightgreen";
   } catch (err) {
     isValid = false;
@@ -50,20 +54,21 @@ function raw_regex(r) {
 }
 
 function template_to_regex_str() {
+  
   var e = document.getElementById("regex_template");
   var s = e.value;
   var orig = s.slice();
- 
   processed = orig.replace(/\s+/g, raw_regex(RegExp(/.+?/).toString()));
 
   processed = processed.replace(
-    /NUMBER/i,
+    /PSA/i,
     raw_regex(RegExp(/\b(?<number>\d+(?:\.\d*)?)\b/).toString())
   );
   processed = processed.replace(
     /\bDATE\b/i,
     raw_regex(RegExp(/\b(?<date>\d{1,2}\/\d{1,2}\/\d{4})\b/).toString())
   );
+  
   LOG("orig", orig);
   LOG("processed", processed);
   var e = document.getElementById("regex");
@@ -108,6 +113,9 @@ function update_num_discarded(n) {
   var e = document.getElementById("num_discarded");
   e.innerHTML = `Number of non-blank lines discarded = ${n}`;
 }
+
+
+
 function parse() {
  
   text = document.getElementById("entry").value;
@@ -117,7 +125,10 @@ function parse() {
   cleaned = new Array();
   discarded = "";
   num_discarded = 0; // number of lines discarded
-  LOG("parse: regex.toString()", regex.toString);
+  //LOG("parse: regex.toString()", regex.toString);
+
+  
+
   for (const line of PSA_text_edit) 
   {
     if(line.match(/FREE/i))
@@ -135,7 +146,7 @@ function parse() {
     m = line.match(regex);
    
     if (!m) {
-    
+      LOG("!m: ",m);
       // does this line match our regEx? If not....
       if (!onlySpaces(line)) {
         // just ignore blank lines totally
@@ -157,9 +168,28 @@ function parse() {
     discardedElem.value = discarded;
     update_num_discarded(num_discarded);
   }
-  //if(!cleaned(0).test
+  //trying to switch for DATE PSA vs PSA DATE (may need to check for this OUTSIDE of this function
+  if(cleaned.length < 2 & discarded.length > 1)
+  {
+    LOG("Cleaned.length", cleaned);
+    checkLen();
+    return;
+  }
+  
+  
   GenerateTable(cleaned);
   return;
+}
+
+function checkLen()
+{
+
+      regex_template=regex_template_2;
+      load_regex_template();
+      template_to_regex_str();
+      parse();
+      return;
+
 }
 
 function diff_days(dt2, dt1) {
@@ -318,7 +348,8 @@ function update_table(do_calc = 0) {
     //LOG(delta_d, psa_value)
     for_regression.push(new Array(delta_d, Math.log(psa_value)));
   }
-  if (for_regression.length < 2) {
+  if (for_regression.length < 2) 
+  {
     alert("must have at least 2 PSA data samples\nSee discarded lines below");
     document.getElementById("PSA_calc").setAttribute("style","display:none");
     return;

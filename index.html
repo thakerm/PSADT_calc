@@ -26,12 +26,12 @@
   <body onload="myOnload()">
   
     <!--Navbar-->
-    <nav class="navbar bg-dark navbar-dark container-sm w-50">
-      <span class="navbar-brand">PSA Doubling Time Calculator</span>
+    <nav class="navbar bg-dark navbar-dark container w-50">
+      <span class="navbar-brand mx-auto">PSA Doubling Time Calculator</span>
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">Help</button>
     </nav>
 
-    <div class="container-sm w-50 " id="container">
+    <div class="container w-50 justify-content-center p-0" id="container">
     
       
     <!-- The Modal WORK IN PROGRESS -->
@@ -183,20 +183,20 @@
         
       </div>
    
-    <div id="PSA_calc" style="display: none" class="container">
-      <p></p>
+    <div id="PSA_calc" style="display: none" class="pt-3">
+     
       <div class="row">
-        <div class="col-auto">
+        <div class="col-6">
         <h4 class="derived">Derived PSA Data Table</h4></div>
-        
+        <div class="col-6" ><h4 class="derived">PSA Doubling Time</h4></div>
         
       </div>
       <div class="row">
-        <div class="col-auto">
+        <div class="col-6">
           <div id="PSA_data"></div>
         </div>
-        <div class="col-auto">
-          <div ><h4 class="derived">PSA Doubling Time</h4></div>
+        <div class="col-3">
+          
           <div class="input-group">
             <input readonly class = "form-control" id="psadt_months"> 
             <div class="input-group-append">
@@ -205,7 +205,7 @@
             </div>
           </div>
           <p></p>
-          <div class="input-group col-auto">
+          <div class="input-group col-3">
             <input readonly class = "form-control" id="psadt_years" aria-describedby="basic-addon2" placeholder="PSA doubling time" aria-label="PSA doubling time in years"> 
             <div class="input-group-append">
               <button class="btn btn-outline-success" id="psadt_years_button" type="button" onclick="copyPaste('#psadt_years','#psadt_years_button')">Copy</button>
