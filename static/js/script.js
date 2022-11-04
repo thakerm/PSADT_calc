@@ -2,6 +2,9 @@ var cleaned;
 // regex may be changed by the user. Note: date and month can be 1 or 2 digits, year must be 4 digits
 var regex_template = "PSA DATE";
 var regex_template_2= "DATE PSA";
+var regex_psa_date = "\b(?<number>\d+(?:\.\d*)?)\b.+?\b(?<date>\d{1,2}\/\d{1,2}\/\d{4})\b";
+var regex_date_psa = "\b(?<date>\d{1,2}\/\d{1,2}\/\d{4})\b.+?\b(?<number>\d+(?:\.\d*)?)\b";
+
 //var regex = /PSA(?:\s*,?\s*(?:(?:CANCER MONITORING)|SCREENING))?\s+(\d+(?:\.\d*)?)\s+(?:\(H\)\s+)?(\d{1,2}\/\d{1,2}\/\d{4})/;
 var regex = null; // will be initialized from regex_template and this what is used to parse input
 //var regex = /(\d+(?:\.\d*)?).+(\d{1,2}\/\d{1,2}\/\d{4})/;
@@ -13,9 +16,6 @@ var checker = 0;
 
 var debug = true;
 var LOG = debug ? console.log.bind(console) : function () {}; // will turn off all console.log statements.
-
-
-
 
 function validate_regex_box() {
 
@@ -53,11 +53,8 @@ function raw_regex(r) {
   return ans;
 }
 
-function template_to_regex_str() {
-  
-  var e = document.getElementById("regex_template");
-  var s = e.value;
-  var orig = s.slice();
+function processRegExp(orig)
+{
   processed = orig.replace(/\s+/g, raw_regex(RegExp(/.+?/).toString()));
 
   processed = processed.replace(
@@ -68,22 +65,43 @@ function template_to_regex_str() {
     /\bDATE\b/i,
     raw_regex(RegExp(/\b(?<date>\d{1,2}\/\d{1,2}\/\d{4})\b/).toString())
   );
+  LOG("processed:",processed);
+  return processed;
+}
+
+function template_to_regex_str() {
+  text = document.getElementById("entry").value;
   
-  LOG("orig", orig);
-  LOG("processed", processed);
-  var e = document.getElementById("regex");
-  e.value = processed;
-  validate_regex_box();
+  processed = processRegExp(regex_template);
+
+  if(RegExp(processed).test(text)==true)
+  {
+    LOG("I am true!!!");
+    var e = document.getElementById("regex");
+    e.value = processed;
+    validate_regex_box();
+    return;
+  }
+  else if(RegExp(processed).test(text)==false)
+  {
+    LOG("I am false!!!");
+    processed=processRegExp(regex_template_2);
+    var e = document.getElementById("regex");
+    e.value = processed;
+    validate_regex_box();
+    return;
+  }
+  
 }
 
 function load_regex_template() {
   var e = document.getElementById("regex_template");
-  e.value = regex_template;
+  //e.value = regex_template;
 }
 
 function show_regex() {
   regex_str = template_to_regex_str();
-  LOG(`show_regex {${regex_str}}`);
+  //LOG(`show_regex {${regex_str}}`);
   var e = document.getElementById("regex");
   e.value = regex_str;
   validate_regex_box();
@@ -91,7 +109,7 @@ function show_regex() {
 
 function myOnload() {
   load_regex_template();
-  template_to_regex_str();
+
   discardedElem = document.getElementById("discarded");
 }
 
@@ -117,7 +135,7 @@ function update_num_discarded(n) {
 
 
 function parse() {
- 
+  template_to_regex_str();
   text = document.getElementById("entry").value;
   document.getElementById("PSA_calc").setAttribute("style","display:block");
   PSA_text_edit = text.split("\n");
@@ -127,7 +145,6 @@ function parse() {
   num_discarded = 0; // number of lines discarded
   //LOG("parse: regex.toString()", regex.toString);
 
-  
 
   for (const line of PSA_text_edit) 
   {
@@ -165,32 +182,17 @@ function parse() {
   if (discarded.length > 0) {
     LOG("discarded", discarded.length, discarded);
     //alert(`Discarded Lines: ${discarded}`);
-    discardedElem.value = discarded;
+    discardedElem.value = discarded.trim();
     update_num_discarded(num_discarded);
   }
   //trying to switch for DATE PSA vs PSA DATE (may need to check for this OUTSIDE of this function
-  if(cleaned.length < 2 & discarded.length > 1)
-  {
-    LOG("Cleaned.length", cleaned);
-    checkLen();
-    return;
-  }
   
   
   GenerateTable(cleaned);
   return;
 }
 
-function checkLen()
-{
 
-      regex_template=regex_template_2;
-      load_regex_template();
-      template_to_regex_str();
-      parse();
-      return;
-
-}
 
 function diff_days(dt2, dt1) {
   var diff = (dt2.getTime() - dt1.getTime()) / 1000;
@@ -447,17 +449,17 @@ function scatterPlot()
 
 function advancedToggle()
 {
-  var inputtemplate = document.getElementById("inputtemplate");
+  //var inputtemplate = document.getElementById("inputtemplate");
   var advancedCheckBox = document.getElementById("advanced");
   var discardTemplate = document.getElementById("discardTemplate");
   if (advancedCheckBox.checked==true)
   {
-    inputtemplate.style.display="block";
+    //inputtemplate.style.display="block";
     discardTemplate.style.display="block";
   }
   else
   {
-    inputtemplate.style.display="none";
+    //inputtemplate.style.display="none";
     discardTemplate.style.display="none";
   }
 

@@ -23,7 +23,7 @@
   }
 
   .derived {
-    color: purple;
+    color: rgb(0, 0, 0);
   }
 
   #psadt_months{
@@ -60,20 +60,10 @@
     background-color: lightgray;
   }
 
-  #container{
-    margin-top: 10px;
-    margin-bottom: 10px;
-    width: auto;
-  }
-
   #discarded{
     text-align: left;
     vertical-align: text-top;
     overflow: auto;
   }
 
-  #title{
-    text-align: center;
-    
-
-  }
+ 

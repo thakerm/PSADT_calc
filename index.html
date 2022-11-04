@@ -26,12 +26,12 @@
   <body onload="myOnload()">
   
     <!--Navbar-->
-    <nav class="navbar bg-dark navbar-dark container w-50">
+    <nav class="navbar bg-dark navbar-dark container ">
       <span class="navbar-brand mx-auto">PSA Doubling Time Calculator</span>
       <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#myModal">Help</button>
     </nav>
 
-    <div class="container w-50 justify-content-center p-0" id="container">
+    <div class="container p-0 bg-light" id="container">
     
       
     <!-- The Modal WORK IN PROGRESS -->
@@ -62,9 +62,7 @@
                 <li>Discarded Lines: Shows all data removed during data processing</li>
                 <li>Regular Expression: This is for advanced users who would like to modify the regular expression to allow for custom PSA data inputs.</li>
               </ol>
-              <video width="720" height="720" autoplay loop>
-                <source src="PSADT 720.mp4" type="video/mp4">
-              </video>
+              
             </p>
             <p>Feedback or Suggestions please email me: thakerm@gmail.com</p>
            
@@ -81,42 +79,12 @@
     </div>
      
       <!--Input Template Box-->
-      <div class="row">
-        <div class="col" >
-          
-          <div id="inputtemplate" style="display: block">
-
-           <h5>
-              Input Template
-              <font size="-1">
-                (select or enter custom):
-                <a href="help.html" target="_blank">Help</a>
-              </font>
-             
-            </h5>
-          
-            <!-- <input id="regex_template"  oninput=template_to_regex_str()  size="55"></input> -->
-          
-            <input
-              list="templates"
-              oninput="template_to_regex_str()"
-              name="regex_template"
-              id="regex_template"
-              type="search"
-            />
-            <datalist id="templates">
-              <option value="PSA DATE"></option>
-              <option value="DATE PSA"></option>
-              <option value="Enter Custom"></option>
-            </datalist>
-
-            <P></P>
-          
-          
-          </div>
+      
        
-          <div class="row">
-            <div class="col">
+          <div class="row pt-2">
+            <label><h4>Copy and paste your PSA data into the textbox:</h4></label>
+            <div class="col-auto">
+            
             <textarea  id="entry" rows="10" cols="57" placeholder="Please copy and paste your PSA data here. No need to edit">
               Test Result	Value	Date/Time
 •	PSA	8.1 (H)	05/25/2022
@@ -181,7 +149,7 @@
           <hr>
         </div>
         
-      </div>
+      
    
     <div id="PSA_calc" style="display: none" class="pt-3">
      
@@ -192,12 +160,12 @@
         
       </div>
       <div class="row">
-        <div class="col-6">
+        <div class="col-auto">
           <div id="PSA_data"></div>
         </div>
-        <div class="col-3">
+        <div class="col-auto">
           
-          <div class="input-group">
+          <div class="input-group col-auto">
             <input readonly class = "form-control" id="psadt_months"> 
             <div class="input-group-append">
               <button id = "psadt_months_button" class="btn btn-outline-success" type="button" onclick="copyPaste('#psadt_months','#psadt_months_button')">Copy</button>
@@ -205,7 +173,7 @@
             </div>
           </div>
           <p></p>
-          <div class="input-group col-3">
+          <div class="input-group col-auto">
             <input readonly class = "form-control" id="psadt_years" aria-describedby="basic-addon2" placeholder="PSA doubling time" aria-label="PSA doubling time in years"> 
             <div class="input-group-append">
               <button class="btn btn-outline-success" id="psadt_years_button" type="button" onclick="copyPaste('#psadt_years','#psadt_years_button')">Copy</button>
@@ -225,8 +193,6 @@
       
       </div>
 
-      </div>
-
     </div>
     <p></p>
     <div  class = "row" id="scatterplotdiv" style="display: none">
@@ -237,7 +203,7 @@
     </div>
   
    
-      
+    <div> 
       <h3>References</h3>
       <ul>
         <li>
