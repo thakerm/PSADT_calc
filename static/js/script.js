@@ -117,13 +117,35 @@ function onlySpaces(str) {
   return str.trim().length === 0;
 }
 
+function data(data)
+{
+  
+  if(data=="data1")
+  {
+    document.getElementById("entry").value = document.getElementById("text_dataset_1").value;
+    parse();
+  }
+  else if(data=="data2")
+  {
+    document.getElementById("entry").value = document.getElementById("text_dataset_2").value;
+    parse();
+  }
+  else{
+    document.getElementById("entry").value = document.getElementById("text_dataset_3").value;
+    parse();
+  }
+}
+
 function clearInput() {
   //LOG('enter clear');
   document.getElementById("entry").value = "";
+  document.getElementById("discarded").value = "";
+  document.getElementById("regex").value = "";
   document.getElementById("PSA_calc").setAttribute("style","display:none");
   document.getElementById("scatterplotdiv").setAttribute("style","display:none");
-  document.getElementById("entry").rows = "10";
-  document.getElementById("entry").cols = "57";
+  update_num_discarded(0);
+  //document.getElementById("entry").rows = "10";
+  //document.getElementById("entry").cols = "57";
 
 }
 
@@ -154,7 +176,8 @@ function parse() {
         // need to add  new line if have some previous
         discarded += "\n";
       }
-      discarded += `${line}`;
+      //discarded += `${line}`;
+      discarded += line.trim();
       num_discarded++;
       continue;
     }
@@ -171,7 +194,8 @@ function parse() {
           // need to add  new line if have some previous
           discarded += "\n";
         }
-        discarded += `${line}`;
+        discarded += line.trim();
+        //discarded += `${line}`;
         num_discarded++;
       }
       continue; // line did not match, go to next
@@ -182,7 +206,7 @@ function parse() {
   if (discarded.length > 0) {
     LOG("discarded", discarded.length, discarded);
     //alert(`Discarded Lines: ${discarded}`);
-    discardedElem.value = discarded.trim();
+    discardedElem.value = discarded;
     update_num_discarded(num_discarded);
   }
   //trying to switch for DATE PSA vs PSA DATE (may need to check for this OUTSIDE of this function
@@ -447,19 +471,35 @@ function scatterPlot()
   }
 }
 
-function advancedToggle()
+function showRegEx()
 {
-  //var inputtemplate = document.getElementById("inputtemplate");
-  var advancedCheckBox = document.getElementById("advanced");
-  var discardTemplate = document.getElementById("discardTemplate");
-  if (advancedCheckBox.checked==true)
+ 
+  var showRegExCheckBox = document.getElementById("showRegEx");
+  var showRegExBox = document.getElementById("showRegExTextBox");
+  if (showRegExCheckBox.checked==true)
   {
-    //inputtemplate.style.display="block";
+    
+    showRegExBox.style.display="block";
+  }
+  else
+  {
+    
+    showRegExBox.style.display="none";
+  }
+
+}
+
+function discardedLines()
+{
+
+  var discardedLineCheckBox = document.getElementById("discardedLines");
+  var discardTemplate = document.getElementById("discardedLineTextBox");
+  if (discardedLineCheckBox.checked==true)
+  {
     discardTemplate.style.display="block";
   }
   else
   {
-    //inputtemplate.style.display="none";
     discardTemplate.style.display="none";
   }
 
