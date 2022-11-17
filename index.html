@@ -28,7 +28,7 @@
    
   </nav>
 
-  <div class="container justify-content-center border" id="container">
+  <div class="container border" id="container">
 
 
     <!-- The Modal WORK IN PROGRESS -->
@@ -58,12 +58,20 @@
             </ol>
             <p><b>Discarded Lines: </b>Shows all lines removed during processing.</p>
 
-            <P><b>We do not store any data.</b></P>
-             <p> <input type="checkbox" id = "demoCheck" name="demo" value="Demo Mode" onclick="demo()">
-              <label for="demo">Demo Mode</label><br></p>
-
+           
+  
+              <div class="form-check form-switch">
+                <input class = "form-check-input" type="checkbox" id = "demoCheck" name="demo" value="Demo Mode" onclick="demo()">
+                <label class ="form-check-label" for="demoCheck">Demo Mode</label>
+              </div>
+              <div class="form-check form-switch">
+                  <input  class = "form-check-input" type="checkbox" id="showRegEx" value="Regular Expression" onclick="showRegEx()">
+                  <label class ="form-check-label" for="showRegEx">Regular Expression (for developer use)</label>
+              </div>
+              
+            <br>
             <p>Feedback or Suggestions please email me: thakerm@gmail.com</p>
-
+            <P>We do not store any data.</P>
 
           </div>
 
@@ -79,79 +87,65 @@
     <!--Input Template Box-->
 
 
-    <div class="row pt-2">
-      <label>
-        <h4>Copy and paste your PSA data into the textbox:</h4>
-      </label>
+    <div class="row pt-2 justify-content-center">
+      
+       
+      <!--Textarea Input-->
       <div class="col-auto">
-
-        <textarea id="entry" rows="10" cols="67"
-          placeholder="Please copy and paste your PSA data here. No need to edit"></textarea>
+        <form>
+          <div class="form-group">
+            <h4>Copy and paste your PSA data into the textbox:</h4>
+            <textarea class="form-control" id="entry" rows="10" cols="97" placeholder="Please copy and paste your PSA data here. No need to edit"></textarea>
+          </div>
+          <div class="form-group pt-2">
+            <button type="button" class="btn btn-primary" onclick="parse()">
+              Parse & Calc
+            </button>
+            <button type="button" class="btn btn-secondary" onclick="clearInput()">
+              Clear
+            </button>
+    
         
-      </div>
-      <div class="col-2" id=demo style="display:none">
-        <button type="button" class="btn btn-info m-2" onclick="data('data1')" id="data1">Sample Dataset 1</button>
-        <button type="button" class="btn btn-info m-2" onclick="data('data2')" id="data2">Sample Dataset 2</button>
-        <button type="button" class="btn btn-info m-2" onclick="data('data3')" id="data3">Sample Dataset 3</button>
-    </div>
-     
-    </div>
-    
-    <div class="row">
-      <div class="col-auto">
-        <p>
-          <button type="button" class="btn btn-primary" onclick="parse()">
-            Parse & Calc
-          </button>
-        </p>
-      </div>
+          </div>
+          <!--Demo Mode Sample Data Buttons-->
+          <div class="form-group pt-2" id="demo" style="display:none">
 
-      <div class="col-auto">
-        <button type="button" class="btn btn-secondary" onclick="clearInput()">
-          Clear
-        </button>
+            <button type="button" class="btn btn-info" onclick="data('data1')" id="data1">Sample Dataset 1</button>
+            <button type="button" class="btn btn-info" onclick="data('data2')" id="data2">Sample Dataset 2</button>
+            <button type="button" class="btn btn-info" onclick="data('data3')" id="data3">Sample Dataset 3</button>
+          </div>
+        
+        </form>
+      
+      <div class="form-check form-switch pt-3">
+        <input class="form-check-input" type="checkbox" id="discardedLines" value="Discarded Lines"
+          onclick="discardedLines()">
+        <label id="discard_lines" class="form-check-label" for="discardedLines">Discarded Data</label>
       </div>
-    </div>
-    <div class="row">
-
-      <div class="col">
-
-        <input type="checkbox" id="discardedLines" value="Discarded Lines" onclick="discardedLines()">
-        <label for="discardedLines">Discarded Lines</label>
-
+      
+      <div class="col-auto pt-2" id="discardedLineTextBox" style="display: none">
+        <form>
+          <div class="form-group">
+            <textarea class="form-control" id="discarded" rows="1" cols="97"
+              placeholder="Discarded data will be shown in this textbox."></textarea>
+            <div id="num_discarded"></div>
+          </div>
+      
+      
+        </form>
       </div>
+      <!--improve this -->
       <div class="row">
-        <div class="col">
-          <input type="checkbox" id="showRegEx" value="Regular Expression" onclick="showRegEx()">
-          <label for="showRegEx">Regular Expression (for developer use)</label>
+        <div id="showRegExTextBox" style="display: none">
+          <textarea placeholder="Regex Template" id="regex" oninput="validate_regex_box()" rows="1" cols="97"></textarea>
         </div>
-
       </div>
-
-
-    </div>
-
-
-    <div class="row pt-3">
-      <div class="col-auto" id="discardedLineTextBox" style="display: none">
-        <h4>Discarded Lines</h4>
-        <textarea id="discarded" rows="4" cols="67"></textarea>
-        <div id="num_discarded"></div>
       </div>
-      <div class="col-auto" id="showRegExTextBox" style="display: none">
-        <h4>Input Template to RegExp</h4>
-        <textarea id="regex" oninput="validate_regex_box()" rows="4" cols="67"></textarea>
-      </div>
-    </div>
-
-    
-
 
 
     <div id="PSA_calc" style="display: none" class="pt-3">
       
-      <div class="row">
-
+      <div class="row justify-content-center">
         <div class="col-auto">
           <label><h4>PSA Doubling Time</h4></label>
           <div class="input-group ">
@@ -202,7 +196,7 @@
 
 <!--Footer-->   
 <div class="container">
-  <footer class="d-flex flex-wrap justify-content-between align-items-center py-2 my-2 border-top">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-2 my-2 border-top ">
     <div class="col-md-4 d-flex align-items-center">
     <A class="text-muted">References</A>
   

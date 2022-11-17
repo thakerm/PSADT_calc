@@ -1,9 +1,11 @@
 var cleaned;
 // regex may be changed by the user. Note: date and month can be 1 or 2 digits, year must be 4 digits
 var regex_template = "PSA DATE";
-var regex_template_2= "DATE PSA";
-var regex_psa_date = "\b(?<number>\d+(?:\.\d*)?)\b.+?\b(?<date>\d{1,2}\/\d{1,2}\/\d{4})\b";
-var regex_date_psa = "\b(?<date>\d{1,2}\/\d{1,2}\/\d{4})\b.+?\b(?<number>\d+(?:\.\d*)?)\b";
+var regex_template_2 = "DATE PSA";
+var regex_psa_date =
+  "\b(?<number>d+(?:.d*)?)\b.+?\b(?<date>d{1,2}/d{1,2}/d{4})\b";
+var regex_date_psa =
+  "\b(?<date>d{1,2}/d{1,2}/d{4})\b.+?\b(?<number>d+(?:.d*)?)\b";
 
 //var regex = /PSA(?:\s*,?\s*(?:(?:CANCER MONITORING)|SCREENING))?\s+(\d+(?:\.\d*)?)\s+(?:\(H\)\s+)?(\d{1,2}\/\d{1,2}\/\d{4})/;
 var regex = null; // will be initialized from regex_template and this what is used to parse input
@@ -12,13 +14,11 @@ var regex = null; // will be initialized from regex_template and this what is us
 var parsedTable; // this table is created at runtime.
 var min_date; // earliest day we have in our table (we start w/ today as being a max value)
 var discaredElem;
-var checker = 0;
 
 var debug = true;
 var LOG = debug ? console.log.bind(console) : function () {}; // will turn off all console.log statements.
 
 function validate_regex_box() {
-
   var e = document.getElementById("regex");
   var s = e.value;
   var isValid = true;
@@ -30,22 +30,25 @@ function validate_regex_box() {
     isValid = false;
     e.style.backgroundColor = "lightpink";
   }
-  LOG("validate_regex_box  isvalid", isValid, "regex.toString()", regex.toString());
+  LOG(
+    "validate_regex_box  isvalid",
+    isValid,
+    "regex.toString()",
+    regex.toString()
+  );
 }
 
 function raw_regex(r) {
   // drops the starting and ending '/' of a regex string representation
   // which confuses the process of going back and forth from RegExp to regex_string representation
-  LOG("R",r);
+  LOG("R", r);
   ans = r.toString();
   LOG("ans length", ans.length);
-  if (ans.charAt(0) == "/") 
-  {
+  if (ans.charAt(0) == "/") {
     ans = ans.slice(1);
     //LOG("ans slice:", ans);
   }
-  if (ans.charAt(ans.length - 1) == "/") 
-  {
+  if (ans.charAt(ans.length - 1) == "/") {
     //LOG("char at length -1: ",ans.charAt(ans.length - 1) );
     ans = ans.slice(0, ans.length - 1);
   }
@@ -53,8 +56,7 @@ function raw_regex(r) {
   return ans;
 }
 
-function processRegExp(orig)
-{
+function processRegExp(orig) {
   processed = orig.replace(/\s+/g, raw_regex(RegExp(/.+?/).toString()));
 
   processed = processed.replace(
@@ -65,33 +67,29 @@ function processRegExp(orig)
     /\bDATE\b/i,
     raw_regex(RegExp(/\b(?<date>\d{1,2}\/\d{1,2}\/\d{4})\b/).toString())
   );
-  LOG("processed:",processed);
+  LOG("processed:", processed);
   return processed;
 }
 
 function template_to_regex_str() {
   text = document.getElementById("entry").value;
-  
+
   processed = processRegExp(regex_template);
 
-  if(RegExp(processed).test(text)==true)
-  {
-    LOG("I am true!!!");
+  if (RegExp(processed).test(text) == true) {
+    //LOG("I am true!!!");
+    var e = document.getElementById("regex");
+    e.value = processed;
+    validate_regex_box();
+    return;
+  } else if (RegExp(processed).test(text) == false) {
+    //LOG("I am false!!!");
+    processed = processRegExp(regex_template_2);
     var e = document.getElementById("regex");
     e.value = processed;
     validate_regex_box();
     return;
   }
-  else if(RegExp(processed).test(text)==false)
-  {
-    LOG("I am false!!!");
-    processed=processRegExp(regex_template_2);
-    var e = document.getElementById("regex");
-    e.value = processed;
-    validate_regex_box();
-    return;
-  }
-  
 }
 
 function load_regex_template() {
@@ -117,52 +115,62 @@ function onlySpaces(str) {
   return str.trim().length === 0;
 }
 
-function data(data)
-{
-  
-  if(data=="data1")
-  {
-    document.getElementById("entry").value = document.getElementById("text_dataset_1").value;
+function data(data) {
+  if (data == "data1") {
+    document.getElementById("entry").value =
+      document.getElementById("text_dataset_1").value;
     parse();
-  }
-  else if(data=="data2")
-  {
-    document.getElementById("entry").value = document.getElementById("text_dataset_2").value;
+  } else if (data == "data2") {
+    document.getElementById("entry").value =
+      document.getElementById("text_dataset_2").value;
     parse();
-  }
-  else{
-    document.getElementById("entry").value = document.getElementById("text_dataset_3").value;
+  } else {
+    document.getElementById("entry").value =
+      document.getElementById("text_dataset_3").value;
     parse();
   }
 }
 
 function clearInput() {
-  //LOG('enter clear');
   document.getElementById("entry").value = "";
   document.getElementById("discarded").value = "";
+  document.getElementById("discard_lines").innerHTML = "Discarded Data:";
   document.getElementById("regex").value = "";
-  document.getElementById("PSA_calc").setAttribute("style","display:none");
-  document.getElementById("scatterplotdiv").setAttribute("style","display:none");
+  document.getElementById("PSA_calc").setAttribute("style", "display:none");
+  document
+    .getElementById("scatterplotdiv")
+    .setAttribute("style", "display:none");
   update_num_discarded(0);
-  document.querySelector("#psadt_years_button").innerHTML="Copy";
-  document.querySelector("#psadt_months_button").innerHTML="Copy";
-  document.querySelector("#psadt_years_button").className="btn btn-outline-success";
-  document.querySelector("#psadt_months_button").className="btn btn-outline-success";
-  
-
+  document.querySelector("#psadt_years_button").innerHTML = "Copy";
+  document.querySelector("#psadt_months_button").innerHTML = "Copy";
+  document.querySelector("#psadt_years_button").className =
+    "btn btn-outline-success";
+  document.querySelector("#psadt_months_button").className =
+    "btn btn-outline-success";
 }
 
 function update_num_discarded(n) {
-  var e = document.getElementById("num_discarded");
-  e.innerHTML = `Number of non-blank lines discarded = ${n}`;
+  var discardedLineTextBox = document.getElementById("num_discarded");
+  var discardLineText = document.getElementById("discard_lines");
+  discardedLineTextBox.innerHTML = `Number of lines discarded = ${n}`;
+  if (n >= 1) {
+    if (n == 1) {
+      discardLineText.innerHTML = "Discarded Data (" + n + " line):";
+      document.getElementById("discarded").rows = n;
+    } else {
+      discardLineText.innerHTML = "Discarded Data (" + n + " lines):";
+      document.getElementById("discarded").rows = n;
+    }
+  } else {
+    document.getElementById("num_discarded").value = "";
+    document.getElementById("discarded").rows = "1";
+  }
 }
-
-
 
 function parse() {
   template_to_regex_str();
   text = document.getElementById("entry").value;
-  document.getElementById("PSA_calc").setAttribute("style","display:block");
+  document.getElementById("PSA_calc").setAttribute("style", "display:block");
   PSA_text_edit = text.split("\n");
   min_date = new Date();
   cleaned = new Array();
@@ -170,11 +178,8 @@ function parse() {
   num_discarded = 0; // number of lines discarded
   //LOG("parse: regex.toString()", regex.toString);
 
-
-  for (const line of PSA_text_edit) 
-  {
-    if(line.match(/FREE/i))
-    {
+  for (const line of PSA_text_edit) {
+    if (line.match(/FREE/i)) {
       if (discarded != "") {
         // need to add  new line if have some previous
         discarded += "\n";
@@ -184,12 +189,11 @@ function parse() {
       num_discarded++;
       continue;
     }
-      
 
     m = line.match(regex);
-   
+
     if (!m) {
-      LOG("!m: ",m);
+      LOG("!m: ", m);
       // does this line match our regEx? If not....
       if (!onlySpaces(line)) {
         // just ignore blank lines totally
@@ -208,18 +212,14 @@ function parse() {
 
   if (discarded.length > 0) {
     LOG("discarded", discarded.length, discarded);
-    //alert(`Discarded Lines: ${discarded}`);
     discardedElem.value = discarded;
     update_num_discarded(num_discarded);
   }
   //trying to switch for DATE PSA vs PSA DATE (may need to check for this OUTSIDE of this function
-  
-  
+
   GenerateTable(cleaned);
   return;
 }
-
-
 
 function diff_days(dt2, dt1) {
   var diff = (dt2.getTime() - dt1.getTime()) / 1000;
@@ -233,9 +233,8 @@ function reset_tables() {
   table_classes = "table table-bordered table-sm table-striped table-hover";
   parsedTable.setAttribute("class", table_classes);
   tabelHeader = parsedTable.createTHead();
-  tabelHeader.className="table-info";
+  tabelHeader.className = "table-info";
   tableBody = parsedTable.createTBody();
-  
 }
 
 function createCheckBox(parentCell, rowNum) {
@@ -249,7 +248,7 @@ function createCheckBox(parentCell, rowNum) {
   checkbox.value = myId;
   checkbox.checked = true;
   checkbox.id = myId;
-  checkbox.style="width:20px;height:20px";
+  checkbox.style = "width:20px;height:20px";
   //checkbox.className = "form-check checkbox-lg";
   checkbox.onchange = function () {
     update_table(1);
@@ -272,7 +271,13 @@ function createCheckBox(parentCell, rowNum) {
 
 function GenerateTable(cleaned) {
   //Build an array containing Customer records.
-  var input_label = ["PSA", "Date", "Days", "ln(PSA)", "Include in Calculation"];
+  var input_label = [
+    "PSA",
+    "Date",
+    "Days",
+    "ln(PSA)",
+    "Include in Calculation",
+  ];
 
   reset_tables(); // parsedTable will be reset after this call.
 
@@ -280,12 +285,11 @@ function GenerateTable(cleaned) {
   columnCount = input_label.length;
   rowCount = cleaned.length; // 'cleaned' was generated by parse()
   //LOG("rowCount", rowCount, "columnCount", columnCount);
- 
+
   // Fill out rest of 'input_table' add the data rows
-  for (var i = 0; i < rowCount+1; i++) {
+  for (var i = 0; i < rowCount + 1; i++) {
     // +1 is for the header
-    
-   
+
     if (i > 0) {
       //MODIFY HERE
       row = tableBody.insertRow(-1);
@@ -305,12 +309,11 @@ function GenerateTable(cleaned) {
       var cell;
       if (i == 0) {
         // heading row
-        if(i==0 && j==0)
-        {
-            row_header = tabelHeader.insertRow(0);
+        if (i == 0 && j == 0) {
+          row_header = tabelHeader.insertRow(0);
         }
         cell = document.createElement("th");
-        cell.style.textAlign="center";
+        cell.style.textAlign = "center";
         cell.innerHTML = input_label[j]; // header values
         row_header.appendChild(cell);
       } else {
@@ -344,9 +347,7 @@ function GenerateTable(cleaned) {
         }
         LOG(i, j, cell);
       }
-      
     }
-    
   }
 
   update_table(1);
@@ -383,16 +384,16 @@ function update_table(do_calc = 0) {
     document.querySelector(`#input_${i}_2`).align = "right";
 
     log_psa_value = Math.log(psa_value);
-    document.querySelector(`#input_${i}_3`).innerHTML = log_psa_value.toFixed(2);
+    document.querySelector(`#input_${i}_3`).innerHTML =
+      log_psa_value.toFixed(2);
     document.querySelector(`#input_${i}_3`).style.color = "black";
     document.querySelector(`#input_${i}_3`).align = "right";
     //LOG(delta_d, psa_value)
     for_regression.push(new Array(delta_d, Math.log(psa_value)));
   }
-  if (for_regression.length < 2) 
-  {
+  if (for_regression.length < 2) {
     alert("must have at least 2 PSA data samples\nSee discarded lines below");
-    document.getElementById("PSA_calc").setAttribute("style","display:none");
+    document.getElementById("PSA_calc").setAttribute("style", "display:none");
     return;
   }
 
@@ -415,6 +416,7 @@ function do_regression(for_regression) {
   psadt_years = psadt / 365.25;
   // Google Chart is now used. It will also show trendlines so later we can remove simpleStatistics
   doChart(for_regression);
+  document.getElementById("psadt_months_button").focus();
   psadt_months_elem = document.getElementById("psadt_months");
   psadt_months_elem.value = psadt_months.toFixed(1) + " Months";
   psadt_years_elem = document.getElementById("psadt_years");
@@ -429,7 +431,7 @@ function doChart(dataA) {
 
 function drawChart(dataArray) {
   // Set Data
- 
+
   var data = google.visualization.arrayToDataTable(dataArray);
   // Set Options
   var options = {
@@ -468,79 +470,55 @@ function drawChart(dataArray) {
     }, // Draw a trendline for data series 0.
   };
   // Draw Chart
-  var chart = new google.visualization.ScatterChart(document.getElementById("myChart"));
+  var chart = new google.visualization.ScatterChart(
+    document.getElementById("myChart")
+  );
   chart.draw(data, options);
 }
 
-function scatterPlot()
-{
+function scatterPlot() {
   var scatterPlotDiv = document.getElementById("scatterplotdiv");
   var scatterCheckBox = document.getElementById("scatter");
-  if (scatterCheckBox.checked==true)
-  {
-    scatterPlotDiv.style.display="block";
-  }
-  else
-  {
-    scatterPlotDiv.style.display="none";
+  if (scatterCheckBox.checked == true) {
+    scatterPlotDiv.style.display = "block";
+  } else {
+    scatterPlotDiv.style.display = "none";
   }
 }
 
-function showRegEx()
-{
- 
+function showRegEx() {
   var showRegExCheckBox = document.getElementById("showRegEx");
   var showRegExBox = document.getElementById("showRegExTextBox");
-  if (showRegExCheckBox.checked==true)
-  {
-    
-    showRegExBox.style.display="block";
+  if (showRegExCheckBox.checked == true) {
+    showRegExBox.style.display = "block";
+  } else {
+    showRegExBox.style.display = "none";
   }
-  else
-  {
-    
-    showRegExBox.style.display="none";
-  }
-
 }
 
-function discardedLines()
-{
-
+function discardedLines() {
   var discardedLineCheckBox = document.getElementById("discardedLines");
   var discardTemplate = document.getElementById("discardedLineTextBox");
-  if (discardedLineCheckBox.checked==true)
-  {
-    discardTemplate.style.display="block";
+  if (discardedLineCheckBox.checked == true) {
+    discardTemplate.style.display = "block";
+  } else {
+    discardTemplate.style.display = "none";
   }
-  else
-  {
-    discardTemplate.style.display="none";
-  }
-
 }
 
-function copyPaste (copy_paste, button_id)
-{
+function copyPaste(copy_paste, button_id) {
   var copyText = document.querySelector(copy_paste);
   copyText.select();
   copyText.setSelectionRange(0, 99999); // For mobile devices
   navigator.clipboard.writeText("PSA Doubling Time: " + copyText.value);
-  document.querySelector(button_id).className="btn btn-success";
-  document.querySelector(button_id).innerHTML="Copied";
-  
+  document.querySelector(button_id).className = "btn btn-success";
+  document.querySelector(button_id).innerHTML = "Copied";
 }
 
-function demo()
-{
-    var demoMode = document.getElementById("demoCheck");
-    var demoButton = document.getElementById("demo");
-    if (demoMode.checked==true)
-    {
-        demoButton.style.display="block";
-    }
-    else
-        demoButton.style.display="none";
+function demo() {
+  var demoMode = document.getElementById("demoCheck");
+  var demoButton = document.getElementById("demo");
+  if (demoMode.checked == true) {
+    demoButton.style.display = "block";
+  } else demoButton.style.display = "none";
 }
-
-
