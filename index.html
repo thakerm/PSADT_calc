@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>PSA Doubling Time Calculator</title>
@@ -15,7 +14,7 @@
   <script>
     google.charts.load("current", { packages: ["corechart"] });
   </script>
-
+<script src="extensions/natural-sorting/bootstrap-table-natural-sorting.js"></script>
 </head>
 
 <body onload="myOnload()">
@@ -57,21 +56,18 @@
               
             </ol>
             <p><b>Discarded Lines: </b>Shows all lines removed during processing.</p>
-
-           
-  
-              <div class="form-check form-switch">
-                <input class = "form-check-input" type="checkbox" id = "demoCheck" name="demo" value="Demo Mode" onclick="demo()">
-                <label class ="form-check-label" for="demoCheck">Demo Mode</label>
-              </div>
-              <div class="form-check form-switch">
-                  <input  class = "form-check-input" type="checkbox" id="showRegEx" value="Regular Expression" onclick="showRegEx()">
-                  <label class ="form-check-label" for="showRegEx">Regular Expression (for developer use)</label>
-              </div>
-              
-            <br>
+            
             <p>Feedback or Suggestions please email me: thakerm@gmail.com</p>
             <P>We do not store any data.</P>
+
+            <div class="form-check form-switch">
+              <input class = "form-check-input" type="checkbox" id = "demoCheck" name="demo" value="Demo Mode" onclick="demo()">
+              <label class ="form-check-label" for="demoCheck">Demo Mode</label>
+            </div>
+            <div class="form-check form-switch">
+                <input  class = "form-check-input" type="checkbox" id="showRegEx" value="Regular Expression" onclick="showRegEx()">
+                <label class ="form-check-label" for="showRegEx">Regular Expression (for developer use)</label>
+            </div>
 
           </div>
 
