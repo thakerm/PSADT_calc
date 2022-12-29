@@ -358,9 +358,10 @@ function GenerateTable(cleaned) {
         cell.style.textAlign = "center";
         cell.innerHTML = input_label[j]; // header values
         row_header.appendChild(cell);
-      } else {
+      } 
+      else {
         cell = row.insertCell(-1);
-        cell.id = `input_${i}_${j}`; // we will use this tag to retrieve values for calculations
+        cell.id = 'input_${i}_${j}'; // we will use this tag to retrieve values for calculations
         cell.contentEditable = false; // by default all the cells are not editable (will change some below)
         //set_input_color(cell)
         if (j <= 1) {
