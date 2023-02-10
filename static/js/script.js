@@ -13,6 +13,7 @@ var regex = null; // will be initialized from regex_template and this what is us
 
 var parsedTable; // this table is created at runtime.
 var min_date; // earliest day we have in our table (we start w/ today as being a max value)
+var new_min_date;
 var max_date;
 var discaredElem;
 
@@ -295,6 +296,8 @@ function createCheckBox(parentCell, rowNum) {
     update_table(1);
   };
 
+
+  
   // creating label for checkbox
   var label = document.createElement("label");
 
@@ -380,6 +383,7 @@ function GenerateTable(cleaned) {
             //LOG("cell.onchange");
             update_table(1);
           };
+          
         } else if (j == 4) {
           // this will be the 'include in calc' checkbox
           cbox = createCheckBox(cell, i);
@@ -400,12 +404,14 @@ function GenerateTable(cleaned) {
 
 function update_table(do_calc = 0) {
   max_date = min_date;
+  //var new_min_date;
   // gets called with do_calc=1 when calculations are to be done.
   var PSA_data_Elem = document.getElementById("PSA_data");
   PSA_data_Elem.innerHTML = "";
   PSA_data_Elem.appendChild(parsedTable);
   // we must do above before we can manipulate the 'Days' column via querySelector()
   var for_regression = new Array();
+  var date_array = new Array();
   for (var i = 1; i < rowCount + 1; i++) {
     // +1 as we have to skip  the header row (which is row 0)
 
@@ -418,17 +424,27 @@ function update_table(do_calc = 0) {
     cell_psa.align = "right";
     LOG("update_table  psa_value", psa_value);
 
+
     cell_date = document.querySelector(`#input_${i}_1`);
     
     cell_date.align = "right";
 
     date_x = new Date(cell_date.innerHTML);
+    
+    LOG("Min Dates: ", min_date);
+    
 
     if(date_x > max_date)
     {
       max_date = date_x;
-    }  
+    }
+    else if((date_x < max_date)&&(date_x>min_date))
+    {
+      new_min_date=date_x;
+    }
+ 
     delta_d = diff_days(date_x, min_date);
+    LOG("delta_d",delta_d)
     
     document.querySelector(`#input_${i}_2`).innerHTML = delta_d.toFixed(0);
     document.querySelector(`#input_${i}_2`).style.color = "black";
@@ -441,6 +457,7 @@ function update_table(do_calc = 0) {
     document.querySelector(`#input_${i}_3`).align = "right";
     //LOG(delta_d, psa_value)
     for_regression.push(new Array(delta_d, Math.log(psa_value)));
+    LOG(for_regression[i]);
   }
   if (for_regression.length < 2) {
     alert("must have at least 2 PSA data samples\nSee discarded lines below");
@@ -449,7 +466,7 @@ function update_table(do_calc = 0) {
   }
   
   if (do_calc) {
-    //sortTable();
+    //sortTable()
     do_regression(for_regression); //for_regression array with days and PSA
   }
 }
@@ -563,7 +580,7 @@ function discardedLines() {
 function copyPaste(copy_paste, button_id) 
 {
   max_date_copy = getMMDDYY(max_date);
-  min_date_copy = getMMDDYY(min_date);
+  min_date_copy = getMMDDYY(new_min_date);
   var copyText = document.querySelector(copy_paste);
   copyText.select();
   copyText.setSelectionRange(0, 99999); // For mobile devices
