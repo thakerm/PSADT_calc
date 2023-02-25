@@ -105,11 +105,11 @@
         <form>
           <div class="form-group">
             <h4>Copy and paste your PSA data into the textbox:</h4>
-            <textarea class="form-control" id="entry" rows="10" cols="97" placeholder="Please copy and paste your PSA data here. No need to edit"></textarea>
+            <textarea class="form-control" id="entry" rows="10" cols="97" placeholder="Please copy and paste your PSA data here. No need to edit "></textarea>
           </div>
           <div class="form-group pt-2">
             <button type="button" class="btn btn-primary" onclick="parse()">
-              Parse & Calc
+              Calculate
             </button>
             <button type="button" class="btn btn-secondary" onclick="clearInput()">
               Clear
@@ -127,11 +127,19 @@
         
         </form>
       
-      <div class="form-check form-switch pt-3">
+        <div class="form-check form-switch pt-3">
+          <input class="form-check-input" type="checkbox" id="scatterPlotChk" value="Scatter Plot"
+            onclick="scatterPlot()" disabled>
+          <label id="scatterPlotChk" class="form-check-label" for="scatterPlotChk">Show Scatter Plot/Trend Line</label>
+        </div>
+
+      <div class="form-check form-switch">
         <input class="form-check-input" type="checkbox" id="discardedLines" value="Discarded Lines"
           onclick="discardedLines()">
         <label id="discard_lines" class="form-check-label" for="discardedLines">Discarded Data</label>
       </div>
+
+     
       
       <div class="col-auto pt-2" id="discardedLineTextBox" style="display: none">
         <form>
@@ -141,9 +149,12 @@
             <div id="num_discarded"></div>
           </div>
       
-      
         </form>
       </div>
+
+     
+  
+
       <!--improve this -->
       <div class="row">
         <div id="showRegExTextBox" style="display: none">
@@ -181,33 +192,45 @@
 
         </div>
         <div class="col-auto">
-          <label><h4>Derived PSA Data Table</h4></label>
+          <label>
+            <h4>Derived PSA Data Table</h4>
+          </label>
           <div id="PSA_data"></div>
         </div>
-      
+       
+        
 
-        <div class="row" style="display: none">
-          <div class="col">
-            <p></p> <input type="checkbox" id="scatter" value="Scatter_Plot" onclick="scatterPlot()">
-            <label for="scatter">Show Scatter Plot</label>
-          </div>
+      </div> 
+       <!--Scatter Plot-->
+     
+
+    </div> <!--end PSA_cal div-->
+    <div id="scatterplotdiv" style="display:none">
+  
+      <div class="row justify-content-center" >
+        <div class="input-group " >
+        
+        </div>
+        <div class="col-auto" id="myChart">
+
         </div>
 
       </div>
+    
+    </div>
 
-    </div>
-    <p></p>
-    <div class="row" id="scatterplotdiv" style="display: none">
-      <div class="col">
-        <h4 class="derived">Scatter Plot & TrendLine</h4>
-        <div class="col" id="myChart"></div>
-      </div>
-    </div>
 
 <!--Footer-->   
 <div class="container">
   <footer class="d-flex flex-wrap justify-content-center align-items-center py-2 my-2 border-top ">
-    <a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#about">About</a>
+    <div class="row">
+
+    <div class="col-auto"><a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#about">About</a></div>
+    <div class="col-auto"><a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#change">Change Log</a></div>  
+      
+
+    </div>
+   
    
      <div class="modal" id="about">
       <div class="modal-dialog modal-md">
@@ -226,6 +249,40 @@
               Dr Thaker is a practicing urologist at Kaiser Permanente Northern California. He earned his Bioengineering Degree from Rutgers University and his medical degree from University Medicine Dentistry of New Jersey (now known as Rowan University). He completed his urology residency at Jefferson Health-New Jersey. I am passionate about the intersection between technology and healthcare.
               </p>
               <p>Feedback or Suggestions please email me: mihir.g.thaker@gmail.com</p>
+
+          </div>
+
+          <!-- Modal footer -->
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="change">
+      <div class="modal-dialog modal-md">
+        <div class="modal-content">
+
+          <!-- Modal Header -->
+          <div class="modal-header">
+            <h4 class="modal-title">Change Log</h4>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <!-- Modal body -->
+          <div class="modal-body">
+        
+            <ul>
+              <li>2/25/2023 - Added scatter plot and trend line</li>
+              <li>2/10/2023 - Copy Paste Bug Fix</li>
+              <li>12/10/2022 - PSA table auto sorted by default</li>
+              <li>11/16/2022 - Bootstrap 5, design change</li>
+              <li>11/2/2022 - Auto detect PSA/Date or Date/PSA in input textbox</li>
+              <li>4/18/2022 - Website Go-Live </li>
+            </ul>
+            
 
           </div>
 

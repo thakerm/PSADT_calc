@@ -139,6 +139,9 @@ function clearInput() {
   document.getElementById("discard_lines").innerHTML = "Discarded Data:";
   document.getElementById("regex").value = "";
   document.getElementById("PSA_calc").setAttribute("style", "display:none");
+  document.getElementById("scatterPlotChk").disabled=true;
+  document.getElementById("scatterPlotChk").checked=false;
+
   document
     .getElementById("scatterplotdiv")
     .setAttribute("style", "display:none");
@@ -461,12 +464,13 @@ function update_table(do_calc = 0) {
   }
   if (for_regression.length < 2) {
     alert("must have at least 2 PSA data samples\nSee discarded lines below");
-    //document.getElementById("PSA_calc").setAttribute("style", "display:none");
+    document.getElementById("PSA_calc").setAttribute("style", "display:none");
     return;
   }
   
   if (do_calc) {
     //sortTable()
+    document.getElementById("scatterPlotChk").disabled=false;
     do_regression(for_regression); //for_regression array with days and PSA
   }
 }
@@ -506,10 +510,10 @@ function drawChart(dataArray) {
   var data = google.visualization.arrayToDataTable(dataArray);
   // Set Options
   var options = {
-    title: `Days vs ln(PSA)  [${dataArray.length - 1} points provided]`, // - 1 as there is a heading row
+    title: `Scatter Plot (Days vs ln(PSA))  [${dataArray.length - 1} points provided]`, // - 1 as there is a heading row
     titleTextStyle: {
-      color: "purple", // any HTML string color ('red', '#cc00cc')
-      fontName: "Times New Roman", // i.e. 'Times New Roman'
+      color: "black", // any HTML string color ('red', '#cc00cc')
+      fontName: "Helvetica", // i.e. 'Times New Roman'
       fontSize: 18, // 12, 18 whatever you want (don't specify px)
       bold: true, // true or false
       italic: false, // true of false
@@ -526,7 +530,7 @@ function drawChart(dataArray) {
       //textStyle: { fontSize: 8 },
     },
     width: 1024,
-    height: 768,
+    height: 600,
     //chartArea: { width: "25%", height: "25%" },
     //chartArea: { left:80, top: 10, bottom:10, width: "90%", height: "90%" },
     legend: { position: "right" },
@@ -549,7 +553,7 @@ function drawChart(dataArray) {
 
 function scatterPlot() {
   var scatterPlotDiv = document.getElementById("scatterplotdiv");
-  var scatterCheckBox = document.getElementById("scatter");
+  var scatterCheckBox = document.getElementById("scatterPlotChk");
   if (scatterCheckBox.checked == true) {
     scatterPlotDiv.style.display = "block";
   } else {
