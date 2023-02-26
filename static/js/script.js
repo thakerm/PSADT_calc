@@ -449,6 +449,7 @@ function update_table(do_calc = 0,myId) {
     else if((date_x < max_date)&&(date_x>=min_date))
     {
       new_min_date=date_x;
+      LOG("New Min Date Created");
     }
  
     delta_d = diff_days(date_x, min_date);
