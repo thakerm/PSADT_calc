@@ -105,7 +105,14 @@
         <form>
           <div class="form-group">
             <h4>Copy and paste your PSA data into the textbox:</h4>
-            <textarea class="form-control" id="entry" rows="10" cols="97" placeholder="Please copy and paste your PSA data here. No need to edit "></textarea>
+            <textarea class="form-control" id="entry" rows="10" cols="97" placeholder="Please copy and paste your PSA data here. No need to edit 
+
+Sample data format:            
+2/25/2023 4.0
+10/25/2022 3.0
+4/25/2022 1.0
+            
+            "></textarea>
           </div>
           <div class="form-group pt-2">
             <button type="button" class="btn btn-primary" onclick="parse()">
@@ -167,6 +174,14 @@
     <div id="PSA_calc" style="display: none" class="pt-3">
       
       <div class="row justify-content-center">
+      
+        <div class="col-auto">
+          <label>
+            <h4>Derived PSA Data Table</h4>
+          </label>
+          <div id="PSA_data"></div>
+        </div>
+       
         <div class="col-auto">
           <label><h4>PSA Doubling Time</h4></label>
           <div class="input-group ">
@@ -191,14 +206,6 @@
 
 
         </div>
-        <div class="col-auto">
-          <label>
-            <h4>Derived PSA Data Table</h4>
-          </label>
-          <div id="PSA_data"></div>
-        </div>
-       
-        
 
       </div> 
        <!--Scatter Plot-->
@@ -221,9 +228,9 @@
 
 
 <!--Footer-->   
-<div class="container">
-  <footer class="d-flex flex-wrap justify-content-center align-items-center py-2 my-2 border-top ">
-    <div class="row">
+<div class="container pt-2">
+  <footer class="row justify-content-center align-items-center py-1 my-1 border-top">
+    <div class="row justify-content-center">
 
     <div class="col-auto"><a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#about">About</a></div>
     <div class="col-auto"><a href="#" class="text-muted" data-bs-toggle="modal" data-bs-target="#change">Change Log</a></div>  

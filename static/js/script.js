@@ -16,6 +16,7 @@ var min_date; // earliest day we have in our table (we start w/ today as being a
 var new_min_date;
 var max_date;
 var discaredElem;
+var lastChkBox;
 
 var debug = true;
 var LOG = debug ? console.log.bind(console) : function () {}; // will turn off all console.log statements.
@@ -136,7 +137,7 @@ function data(data) {
 function clearInput() {
   document.getElementById("entry").value = "";
   document.getElementById("discarded").value = "";
-  document.getElementById("discard_lines").innerHTML = "Discarded Data:";
+  document.getElementById("discard_lines").innerHTML = "Discarded Data";
   document.getElementById("regex").value = "";
   document.getElementById("PSA_calc").setAttribute("style", "display:none");
   document.getElementById("scatterPlotChk").disabled=true;
@@ -178,6 +179,7 @@ function parse() {
   document.getElementById("PSA_calc").setAttribute("style", "display:block");
   PSA_text_edit = text.split("\n");
   min_date = new Date();
+  LOG("parse min date",min_date);
   cleaned = new Array();
   discarded = "";
   num_discarded = 0; // number of lines discarded
@@ -296,7 +298,7 @@ function createCheckBox(parentCell, rowNum) {
   checkbox.style = "width:20px;height:20px";
   //checkbox.className = "form-check checkbox-lg";
   checkbox.onchange = function () {
-    update_table(1);
+    update_table(1,this);
   };
 
 
@@ -405,10 +407,11 @@ function GenerateTable(cleaned) {
 }
 
 
-function update_table(do_calc = 0) {
+function update_table(do_calc = 0,myId) {
   max_date = min_date;
-  //var new_min_date;
+  
   // gets called with do_calc=1 when calculations are to be done.
+  
   var PSA_data_Elem = document.getElementById("PSA_data");
   PSA_data_Elem.innerHTML = "";
   PSA_data_Elem.appendChild(parsedTable);
@@ -433,6 +436,8 @@ function update_table(do_calc = 0) {
     cell_date.align = "right";
 
     date_x = new Date(cell_date.innerHTML);
+
+    LOG("Date_x", date_x);
     
     LOG("Min Dates: ", min_date);
     
@@ -441,7 +446,7 @@ function update_table(do_calc = 0) {
     {
       max_date = date_x;
     }
-    else if((date_x < max_date)&&(date_x>min_date))
+    else if((date_x < max_date)&&(date_x>=min_date))
     {
       new_min_date=date_x;
     }
@@ -464,7 +469,19 @@ function update_table(do_calc = 0) {
   }
   if (for_regression.length < 2) {
     alert("must have at least 2 PSA data samples\nSee discarded lines below");
-    document.getElementById("PSA_calc").setAttribute("style", "display:none");
+    entry_value = document.getElementById("entry").value;
+    if(entry_value=="")
+    {
+      document.getElementById("PSA_calc").setAttribute("style", "display:none");
+      document.getElementById("scatterplotdiv").setAttribute("style", "display:none");
+    }
+    else{
+      document.getElementById(myId.id).checked=true;
+    
+    }
+ 
+   
+    //document.getElementById("PSA_calc").setAttribute("style", "display:none");
     return;
   }
   
