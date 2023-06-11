@@ -105,8 +105,18 @@ function show_regex() {
 
 function myOnload() {
   load_regex_template();
-
   discardedElem = document.getElementById("discarded");
+  const myURLKeyVals = window.location.search;
+  console.log("URL Key: ", myURLKeyVals);
+  const URLParams = new URLSearchParams(myURLKeyVals);
+  const decode = decodeURIComponent(URLParams);
+  console.log(decode);
+  document.getElementById("entry").value = decode;
+  if(decode != "")
+  {
+      parse();
+  }
+
 }
 
 function onlySpaces(str) {
